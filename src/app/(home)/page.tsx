@@ -5,6 +5,8 @@ import { api, HydrateClient } from "@/trpc/server";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight, Utensils } from "lucide-react";
+import VideoUrlInput from "@/modules/home/ui/components/video-url-input";
+import RecentRecipes from "@/modules/home/ui/components/recent-recipes";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
@@ -65,7 +67,7 @@ export default async function Home() {
                   Works with YouTube, Instagram, and TikTok cooking videos
                 </p>
               </div>
-              {/* <VideoUrlInput /> */}
+              <VideoUrlInput />
             </div>
           </div>
         </section>
@@ -80,7 +82,7 @@ export default async function Home() {
                 Check out these recipes recently created by our users
               </p>
             </div>
-            {/* <RecentRecipes /> */}
+            <RecentRecipes />
           </div>
         </section>
 
