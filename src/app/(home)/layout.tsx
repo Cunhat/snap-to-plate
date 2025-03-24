@@ -22,7 +22,10 @@ export default function RootLayout({
             <span className="text-xl font-bold">SnapToPlate</span>
           </Link>
           <nav className="flex items-center gap-4">
-            <Link href="/saved" className="text-sm font-medium hover:underline">
+            <Link
+              href="/savedRecipes"
+              className="text-sm font-medium hover:underline"
+            >
               Saved Recipes
             </Link>
             <Link
