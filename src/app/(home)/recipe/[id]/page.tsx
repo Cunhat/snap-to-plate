@@ -62,7 +62,7 @@ const recipeData = {
   tags: ["Pasta", "Italian", "Quick Meals", "Vegetarian"],
 };
 
-export default function RecipePage({ params }: { params: { id: string } }) {
+export default function RecipePage() {
   // In a real app, we would fetch the recipe data based on the ID
   const recipe = recipeData;
 
