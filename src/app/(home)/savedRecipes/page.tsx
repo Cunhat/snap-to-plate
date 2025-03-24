@@ -147,8 +147,11 @@ export default function SavedRecipes() {
               <TabsContent value="recent" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {savedRecipes.slice(0, 2).map((recipe) => (
-                    <Card key={recipe.id} className="h-full overflow-hidden">
-                      <div className="relative aspect-video">
+                    <Card
+                      key={recipe.id}
+                      className="h-full gap-0 overflow-hidden py-0"
+                    >
+                      <div className="relative h-[250px]">
                         <img
                           src={recipe.image || "/placeholder.svg"}
                           alt={recipe.title}
