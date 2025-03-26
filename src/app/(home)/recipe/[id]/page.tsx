@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 // This would normally come from a database or API
+
 const recipeData = {
   id: "demo-recipe",
   title: "Creamy Garlic Parmesan Pasta",

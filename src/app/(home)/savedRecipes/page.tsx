@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Utensils, FolderPlus, Search, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import RecipeCard from "@/components/recipe-card";
 
 // Mock data for saved recipes
 const savedRecipes = [
@@ -103,121 +104,21 @@ export default function SavedRecipes() {
               <TabsContent value="all" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {savedRecipes.map((recipe) => (
-                    <Card key={recipe.id} className="h-full overflow-hidden">
-                      <div className="relative aspect-video">
-                        <img
-                          src={recipe.image || "/placeholder.svg"}
-                          alt={recipe.title}
-                          className="h-full w-full object-cover"
-                        />
-                        <Badge className="absolute top-2 right-2">
-                          {recipe.source}
-                        </Badge>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 left-2 h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <CardContent className="p-4">
-                        <Link href={`/recipe/${recipe.id}`}>
-                          <h3 className="hover:text-primary text-lg font-semibold transition-colors">
-                            {recipe.title}
-                          </h3>
-                        </Link>
-                        <div className="mt-2 flex items-center gap-2">
-                          <Badge variant="outline">{recipe.category}</Badge>
-                          <div className="text-muted-foreground flex items-center text-sm">
-                            <Clock className="mr-1 h-3.5 w-3.5" />
-                            {recipe.duration}
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="p-4 pt-0">
-                        <div className="text-muted-foreground text-sm">
-                          Saved {recipe.saved}
-                        </div>
-                      </CardFooter>
-                    </Card>
+                    <RecipeCard key={recipe.id} {...recipe} />
                   ))}
                 </div>
               </TabsContent>
               <TabsContent value="recent" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {savedRecipes.slice(0, 2).map((recipe) => (
-                    <Card
-                      key={recipe.id}
-                      className="h-full gap-0 overflow-hidden py-0"
-                    >
-                      <div className="relative h-[250px]">
-                        <img
-                          src={recipe.image || "/placeholder.svg"}
-                          alt={recipe.title}
-                          className="h-full w-full object-cover"
-                        />
-                        <Badge className="absolute top-2 right-2">
-                          {recipe.source}
-                        </Badge>
-                      </div>
-                      <CardContent className="p-4">
-                        <Link href={`/recipe/${recipe.id}`}>
-                          <h3 className="hover:text-primary text-lg font-semibold transition-colors">
-                            {recipe.title}
-                          </h3>
-                        </Link>
-                        <div className="mt-2 flex items-center gap-2">
-                          <Badge variant="outline">{recipe.category}</Badge>
-                          <div className="text-muted-foreground flex items-center text-sm">
-                            <Clock className="mr-1 h-3.5 w-3.5" />
-                            {recipe.duration}
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="p-4 pt-0">
-                        <div className="text-muted-foreground text-sm">
-                          Saved {recipe.saved}
-                        </div>
-                      </CardFooter>
-                    </Card>
+                    <RecipeCard key={recipe.id} {...recipe} />
                   ))}
                 </div>
               </TabsContent>
               <TabsContent value="favorites" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {savedRecipes.slice(0, 1).map((recipe) => (
-                    <Card key={recipe.id} className="h-full overflow-hidden">
-                      <div className="relative aspect-video">
-                        <img
-                          src={recipe.image || "/placeholder.svg"}
-                          alt={recipe.title}
-                          className="h-full w-full object-cover"
-                        />
-                        <Badge className="absolute top-2 right-2">
-                          {recipe.source}
-                        </Badge>
-                      </div>
-                      <CardContent className="p-4">
-                        <Link href={`/recipe/${recipe.id}`}>
-                          <h3 className="hover:text-primary text-lg font-semibold transition-colors">
-                            {recipe.title}
-                          </h3>
-                        </Link>
-                        <div className="mt-2 flex items-center gap-2">
-                          <Badge variant="outline">{recipe.category}</Badge>
-                          <div className="text-muted-foreground flex items-center text-sm">
-                            <Clock className="mr-1 h-3.5 w-3.5" />
-                            {recipe.duration}
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="p-4 pt-0">
-                        <div className="text-muted-foreground text-sm">
-                          Saved {recipe.saved}
-                        </div>
-                      </CardFooter>
-                    </Card>
+                    <RecipeCard key={recipe.id} {...recipe} />
                   ))}
                 </div>
               </TabsContent>

@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
-        <div className="container mx-auto flex items-center justify-between py-4">
+        <div className="container flex items-center justify-between py-4">
           <Link href="/" className="flex items-center gap-2">
             <Utensils className="text-primary h-6 w-6" />
             <span className="text-xl font-bold">SnapToPlate</span>
@@ -40,7 +40,7 @@ export default function RootLayout({
       </header>
       <main className="flex-1">{children}</main>
       <footer className="border-t py-6 md:py-8">
-        <div className="container mx-auto flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="container flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2">
             <Utensils className="text-primary h-5 w-5" />
             <span className="text-lg font-semibold">SnapToPlate</span>
