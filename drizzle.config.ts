@@ -6,8 +6,7 @@ export default {
   schema: "./src/server/db/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    // url: env.DATABASE_URL,
-    url: "sdsadasd",
+    url: env.DATABASE_URL,
   },
   tablesFilter: ["snap-to-plate_*"],
 } satisfies Config;

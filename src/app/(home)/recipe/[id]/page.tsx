@@ -13,6 +13,7 @@ import {
   Printer,
   Youtube,
 } from "lucide-react";
+import { env } from "@/env";
 
 // This would normally come from a database or API
 
@@ -66,6 +67,8 @@ const recipeData = {
 export default function RecipePage() {
   // In a real app, we would fetch the recipe data based on the ID
   const recipe = recipeData;
+
+  console.log("DBBBBB", env.DATABASE_URL);
 
   return (
     <main className="flex-1 py-8">

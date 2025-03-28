@@ -1,6 +1,17 @@
 import VideoUrlInput from "../components/video-url-input";
+import { GoogleGenAI } from "@google/genai";
 
-export default function UrlInput() {
+export default async function UrlInput() {
+  const ai = new GoogleGenAI({ apiKey: "YOUR_API_KEY" });
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: "Explain how AI works",
+  });
+  console.log(response.text);
+
+  const handleSubmit = async (e: React.FormEvent) => {};
+
   return (
     <section className="py-12 md:py-16">
       <div className="container px-4 md:px-6">
@@ -13,7 +24,7 @@ export default function UrlInput() {
               Works with YouTube, Instagram, and TikTok cooking videos
             </p>
           </div>
-          <VideoUrlInput />
+          <VideoUrlInput submit={handleSubmit} />
         </div>
       </div>
     </section>

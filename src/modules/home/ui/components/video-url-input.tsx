@@ -9,7 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
-export default function VideoUrlInput() {
+type VideoUrlInputProps = {
+  submit: (e: React.FormEvent) => void;
+};
+
+export default function VideoUrlInput({ submit }: VideoUrlInputProps) {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -35,10 +39,7 @@ export default function VideoUrlInput() {
 
     // In a real app, we would send the URL to our backend for processing
     // For this demo, we'll simulate a delay and redirect to a recipe page
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push(`/recipe/demo-recipe?source=${encodeURIComponent(url)}`);
-    }, 3000);
+    submit(e);
   };
 
   return (

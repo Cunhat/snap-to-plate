@@ -24,7 +24,7 @@ export default function RecipeCard({
 }: RecipeCardProps) {
   return (
     <Card key={id} className="h-full gap-0 overflow-hidden py-0">
-      <div className="relative aspect-video max-h-[200px]">
+      <div className="relative aspect-video max-h-[250px]">
         <img
           src={image || "/placeholder.svg"}
           alt={title}
@@ -46,9 +46,11 @@ export default function RecipeCard({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <div className="text-muted-foreground text-sm">Saved {saved}</div>
-      </CardFooter>
+      {saved && (
+        <CardFooter className="p-4 pt-0">
+          <div className="text-muted-foreground text-sm">Saved {saved}</div>
+        </CardFooter>
+      )}
     </Card>
   );
 }

@@ -1,8 +1,14 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
-import { index, pgTableCreator } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import {
+  integer,
+  pgTableCreator,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -12,16 +18,57 @@ import { index, pgTableCreator } from "drizzle-orm/pg-core";
  */
 export const createTable = pgTableCreator((name) => `snap-to-plate_${name}`);
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+export const recipes = createTable("recipes", {
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
+  createdAt: timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  title: varchar({ length: 256 }),
+  description: text(),
+  image: text(),
+  source: text(),
+  prepTime: integer(),
+  cookTime: integer(),
+  totalTime: integer(),
+  servings: integer(),
+  difficulty: varchar({ length: 256 }),
+  ingredients: text().array(),
+  instructions: text().array(),
+  tags: text().array(),
+  nutritionId: integer().references(() => nutrition.id),
+  sourceId: integer().references(() => source.id),
+});
+
+export const nutrition = createTable("nutrition", {
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
+  createdAt: timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  calories: integer(),
+  protein: integer(),
+  carbs: integer(),
+  fat: integer(),
+  fiber: integer(),
+  sugar: integer(),
+});
+
+export const source = createTable("source", {
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
+  createdAt: timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  platform: varchar({ length: 256 }),
+  url: text(),
+});
+
+export const recipeRelations = relations(recipes, ({ one }) => ({
+  nutrition: one(nutrition, {
+    fields: [recipes.nutritionId],
+    references: [nutrition.id],
   }),
-  (t) => [index("name_idx").on(t.name)],
-);
+  source: one(source, {
+    fields: [recipes.sourceId],
+    references: [source.id],
+  }),
+}));
