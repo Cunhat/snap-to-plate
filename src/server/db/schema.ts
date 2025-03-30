@@ -27,7 +27,6 @@ export const recipes = createTable("recipes", {
   title: varchar({ length: 256 }),
   description: text(),
   image: text(),
-  source: text(),
   prepTime: integer(),
   cookTime: integer(),
   totalTime: integer(),
@@ -60,6 +59,7 @@ export const source = createTable("source", {
     .notNull(),
   platform: varchar({ length: 256 }),
   url: text(),
+  channel: text(),
 });
 
 export const recipeRelations = relations(recipes, ({ one }) => ({
