@@ -10,7 +10,7 @@ type RecipeCardProps = {
   source: string;
   duration: string;
   category: string;
-  saved: string;
+  saved?: string;
 };
 
 export default function RecipeCard({

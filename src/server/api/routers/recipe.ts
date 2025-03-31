@@ -9,10 +9,18 @@ import { nutrition, recipes, source } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const recipeRouter = createTRPCRouter({
-  getRecipe: publicProcedure.query(async ({ ctx }) => {
-    const recipe = await ctx.db.query.recipes.findFirst();
-    return recipe;
-  }),
+  getRecipe: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const recipe = await ctx.db.query.recipes.findFirst({
+        where: eq(recipes.id, Number(input.id)),
+        with: {
+          source: true,
+          nutrition: true,
+        },
+      });
+      return recipe;
+    }),
   createRecipe: publicProcedure
     .input(
       z.object({
@@ -20,15 +28,18 @@ export const recipeRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const checkIfRecipeExists = await ctx.db.query.recipes.findFirst({
+      console.log(input.videoUrl);
+
+      const checkIfSourceExists = await ctx.db.query.source.findFirst({
         where: eq(source.url, input.videoUrl),
       });
 
-      if (checkIfRecipeExists) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Recipe already exists",
+      if (checkIfSourceExists) {
+        const recipe = await ctx.db.query.recipes.findFirst({
+          where: eq(recipes.sourceId, checkIfSourceExists.id),
         });
+
+        return recipe;
       }
 
       const ai = new GoogleGenAI({ apiKey: env.GOOGLE_GENAI_API_KEY });
@@ -61,8 +72,6 @@ export const recipeRouter = createTRPCRouter({
       console.log(formattedResponse);
 
       const recipe = await JSON.parse(formattedResponse);
-
-      //   const parsedRecipe = recipeInsertSchema.parse(recipe);
 
       // Create source
       const createSource = await ctx.db
@@ -100,12 +109,15 @@ export const recipeRouter = createTRPCRouter({
         });
       }
 
-      const createdRecipe = await ctx.db.insert(recipes).values({
-        ...recipe,
-        sourceId: createSource[0].id,
-        nutritionId: createNutrition[0].id,
-      });
+      const createdRecipe = await ctx.db
+        .insert(recipes)
+        .values({
+          ...recipe,
+          sourceId: createSource[0].id,
+          nutritionId: createNutrition[0].id,
+        })
+        .returning();
 
-      return response;
+      return createdRecipe[0];
     }),
 });

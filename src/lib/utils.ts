@@ -59,5 +59,5 @@ ${videoUrl}
 9. **Difficulty Level**: if difficulty level is not explicitly stated, estimate it based on the complexity of the recipe.
 10. **Error Handling**: if is not possible to extract the recipe details, return an error with the case of the error.
 11. **Response Format**: This is very important and mandatory, the response must be only the JSON object, nothing else.
-
+12. **Image**: Is really important to get the video thumbnail as the image.
 `;

@@ -38,12 +38,18 @@ export default function VideoUrlInput() {
     },
   });
 
-  const { mutate, isPending } = api.recipe.createRecipe.useMutation();
+  const { mutate, isPending } = api.recipe.createRecipe.useMutation({
+    onSuccess: (data) => {
+      console.log(data);
+      router.push(`/recipe/${data?.id}`);
+    },
+  });
 
   const handleSubmit = async (
     formData: z.infer<typeof VideoUrlInputSchema>,
   ) => {
     try {
+      console.log(formData.url);
       mutate({ videoUrl: formData.url });
     } catch (error) {
       console.error("Error:", error);
