@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
-import { GoogleGenAI } from "@google/genai";
 import { env } from "@/env";
 import { prompt } from "@/lib/utils";
-import { recipeInsertSchema } from "@/lib/schemas";
-import { TRPCError } from "@trpc/server";
 import { nutrition, recipes, source } from "@/server/db/schema";
+import { GoogleGenAI } from "@google/genai";
+import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { createTRPCRouter, publicProcedure } from "../trpc";
+import { type Recipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
   getRecipe: publicProcedure
@@ -69,9 +69,7 @@ export const recipeRouter = createTRPCRouter({
         .replace("```json", "")
         .replace("```", "");
 
-      console.log(formattedResponse);
-
-      const recipe = await JSON.parse(formattedResponse);
+      const recipe = (await JSON.parse(formattedResponse)) as Recipe;
 
       // Create source
       const createSource = await ctx.db
@@ -83,7 +81,7 @@ export const recipeRouter = createTRPCRouter({
         })
         .returning();
 
-      if (!createSource || !createSource[0]) {
+      if (!createSource?.[0]) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create source",
@@ -93,16 +91,16 @@ export const recipeRouter = createTRPCRouter({
       const createNutrition = await ctx.db
         .insert(nutrition)
         .values({
-          calories: recipe.nutrition.calories,
-          protein: recipe.nutrition.protein,
-          carbs: recipe.nutrition.carbs,
-          fat: recipe.nutrition.fat,
-          fiber: recipe.nutrition.fiber,
-          sugar: recipe.nutrition.sugar,
+          calories: Number(recipe.nutrition.calories),
+          protein: Number(recipe.nutrition.protein),
+          carbs: Number(recipe.nutrition.carbs),
+          fat: Number(recipe.nutrition.fat),
+          fiber: Number(recipe.nutrition.fiber),
+          sugar: Number(recipe.nutrition.sugar),
         })
         .returning();
 
-      if (!createNutrition || !createNutrition[0]) {
+      if (!createNutrition?.[0]) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create nutrition",
@@ -112,7 +110,15 @@ export const recipeRouter = createTRPCRouter({
       const createdRecipe = await ctx.db
         .insert(recipes)
         .values({
-          ...recipe,
+          title: recipe.title,
+          description: recipe.description,
+          image: recipe.image,
+          totalTime: Number(recipe.totalTime),
+          servings: recipe.servings,
+          difficulty: recipe.difficulty,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          tags: recipe.tags,
           sourceId: createSource[0].id,
           nutritionId: createNutrition[0].id,
         })

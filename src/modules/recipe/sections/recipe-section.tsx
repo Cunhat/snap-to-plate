@@ -68,7 +68,7 @@ function RecipeSectionSuspense({ id }: { id: string }) {
 
               <div className="mt-4 flex items-center gap-2">
                 <Link
-                  href={recipe.source?.url || ""}
+                  href={recipe.source?.url ?? ""}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground inline-flex items-center text-sm"
@@ -81,8 +81,8 @@ function RecipeSectionSuspense({ id }: { id: string }) {
 
             <div className="aspect-video overflow-hidden rounded-lg">
               <img
-                src={recipe.image || "/placeholder.svg"}
-                alt={recipe.title || ""}
+                src={recipe.image ?? "/placeholder.svg"}
+                alt={recipe.title ?? ""}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -93,7 +93,7 @@ function RecipeSectionSuspense({ id }: { id: string }) {
                   <p className="text-sm font-medium">Total Time</p>
                   <p className="text-muted-foreground text-sm">
                     {dayjs
-                      .duration(recipe?.totalTime || 0, "seconds")
+                      .duration(recipe?.totalTime ?? 0, "seconds")
                       .format("HH[h] mm[m]")}
                   </p>
                 </div>

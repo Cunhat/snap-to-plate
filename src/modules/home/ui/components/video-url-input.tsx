@@ -22,8 +22,6 @@ import {
 } from "@/components/ui/form";
 import { api } from "@/trpc/react";
 
-type VideoUrlInputProps = {};
-
 const VideoUrlInputSchema = z.object({
   url: z.string().url(),
 });
@@ -77,10 +75,6 @@ export default function VideoUrlInput() {
                         {...field}
                       />
                     </FormControl>
-                    {/* <FormDescription>
-                      Processing may take up to 1 minute depending on video
-                      length
-                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
