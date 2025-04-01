@@ -15,8 +15,6 @@ export interface Recipe {
     description:  string; // A concise description of the recipe
     image:        string; // URL of an image representing the recipe
     source:       Source; // Source of the recipe
-    prepTime:     number; // Preparation time in seconds
-    cookTime:     number; // Cooking time in seconds
     totalTime:    number; // Total time in seconds
     servings:     number; // Number of servings
     difficulty:   string; // Difficulty level (e.g., "Easy", "Medium", "Hard")
@@ -53,7 +51,7 @@ ${videoUrl}
 3.  **Accurate Interpretation:** Interpret the video accurately to extract the relevant recipe details. Also, give me the exact title and the description of the video.
 4.  **Array Formatting:** Ensure that the "ingredients", "instructions", and "tags" fields are correctly formatted as JSON arrays of strings.
 5.  **Numerical Values:** Ensure that "servings" and "calories" are numerical values.
-6.  **Time Formatting**: Format "prepTime", "cookTime", and "totalTime" as strings.
+6.  **Time Formatting**: Format "totalTime" as strings and seconds, please pay really attention to this because is very important to give the correct time to the user.
 7.  **Source Information:** Populate the "source" object with the correct platform, URL, and channel name.
 8.  **Nutritional Estimates**: if no nutrition information is available, attempt to estimate the values based on ingredients and common cooking techniques. If no estimate is possible, provide "N/A" for all nutritional values.
 9. **Difficulty Level**: if difficulty level is not explicitly stated, estimate it based on the complexity of the recipe.

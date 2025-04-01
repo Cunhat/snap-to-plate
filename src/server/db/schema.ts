@@ -27,8 +27,6 @@ export const recipes = createTable("recipes", {
   title: varchar({ length: 256 }),
   description: text(),
   image: text(),
-  prepTime: integer(),
-  cookTime: integer(),
   totalTime: integer(),
   servings: integer(),
   difficulty: varchar({ length: 256 }),

@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   BookmarkPlus,
   Clock,
+  Cog,
   Printer,
   Share2,
   Users,
@@ -15,6 +16,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+
+// First, extend dayjs with the duration plugin
+dayjs.extend(duration);
 
 export function RecipeSection({ id }: { id: string }) {
   return (
@@ -79,41 +85,16 @@ function RecipeSectionSuspense({ id }: { id: string }) {
                 alt={recipe.title || ""}
                 className="h-full w-full object-cover"
               />
-              {/* <iframe
-                src="https://www.youtube.com/embed/KR33CuVXr24?si=5b-HwmAyyjZxV8n4"
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen
-                className="h-full w-full"
-              ></iframe> */}
-
-              {/* <iframe
-                src={`https://www.youtube.com/embed/${recipe.source?.url?.replace("https://www.youtube.com/watch?v=", "")}`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe> */}
-              {/* <iframe
-                src={
-                  recipe.source?.url?.includes("youtube.com/watch?v=")
-                    ? recipe.source.url.replace("watch?v=", "embed/")
-                    : recipe.source?.url
-                }
-                title={recipe.title || ""}
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              /> */}
             </div>
-
             <div className="flex flex-wrap gap-6 border-y py-4">
               <div className="flex items-center gap-2">
                 <Clock className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="text-sm font-medium">Total Time</p>
                   <p className="text-muted-foreground text-sm">
-                    {recipe.totalTime}
+                    {dayjs
+                      .duration(recipe?.totalTime || 0, "seconds")
+                      .format("HH[h] mm[m]")}
                   </p>
                 </div>
               </div>
@@ -127,33 +108,7 @@ function RecipeSectionSuspense({ id }: { id: string }) {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-muted-foreground h-5 w-5"
-                >
-                  <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
-                  <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                  <path d="M12 2v2" />
-                  <path d="M12 22v-2" />
-                  <path d="m17 20.66-1-1.73" />
-                  <path d="M11 10.27 7 3.34" />
-                  <path d="m20.66 17-1.73-1" />
-                  <path d="m3.34 7 1.73 1" />
-                  <path d="M14 12h8" />
-                  <path d="M2 12h2" />
-                  <path d="m20.66 7-1.73 1" />
-                  <path d="m3.34 17 1.73-1" />
-                  <path d="m17 3.34-1 1.73" />
-                  <path d="m7 20.66 1-1.73" />
-                </svg>
+                <Cog className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="text-sm font-medium">Difficulty</p>
                   <p className="text-muted-foreground text-sm">
@@ -250,7 +205,7 @@ function RecipeSectionSuspense({ id }: { id: string }) {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardContent className="p-4">
                 <h3 className="mb-3 font-semibold">Adjust Servings</h3>
                 <div className="flex items-center">
@@ -302,7 +257,7 @@ function RecipeSectionSuspense({ id }: { id: string }) {
                   </Button>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
             <Card>
               <CardContent className="p-4">

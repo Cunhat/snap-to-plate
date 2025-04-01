@@ -10,8 +10,6 @@ export interface Recipe {
   description: string; // A concise description of the recipe
   image: string; // URL of an image representing the recipe
   source: Source; // Source of the recipe
-  prepTime: string; // Preparation time (e.g., "15 minutes")
-  cookTime: string; // Cooking time (e.g., "30 minutes")
   totalTime: string; // Total time (prep + cook, e.g., "45 minutes")
   servings: number; // Number of servings
   difficulty: string; // Difficulty level (e.g., "Easy", "Medium", "Hard")
