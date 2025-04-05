@@ -1,7 +1,19 @@
-import React from "react";
+"use client";
+import React, { Suspense } from "react";
 import RecentRecipes from "../components/recent-recipes";
+import { api } from "@/trpc/react";
 
-export default function RecentRecipesSection() {
+export function RecentRecipesSection() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RecentRecipesSectionSuspense />
+    </Suspense>
+  );
+}
+
+function RecentRecipesSectionSuspense() {
+  const [recipes] = api.recipe.getLatestRecipes.useSuspenseQuery();
+
   return (
     <section className="bg-muted py-12 md:py-16">
       <div className="container px-4 md:px-6">
@@ -13,7 +25,7 @@ export default function RecentRecipesSection() {
             Check out these recipes recently created by our users
           </p>
         </div>
-        <RecentRecipes />
+        <RecentRecipes recipes={recipes} />
       </div>
     </section>
   );

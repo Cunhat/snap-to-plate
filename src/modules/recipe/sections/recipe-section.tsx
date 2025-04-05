@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import {
   ArrowLeft,
   BookmarkPlus,
@@ -16,10 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 
-// First, extend dayjs with the duration plugin
 dayjs.extend(duration);
 
 export function RecipeSection({ id }: { id: string }) {

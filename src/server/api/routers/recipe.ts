@@ -3,7 +3,7 @@ import { prompt } from "@/lib/utils";
 import { nutrition, recipes, source } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { type Recipe } from "@/lib/schemas";
@@ -21,6 +21,16 @@ export const recipeRouter = createTRPCRouter({
       });
       return recipe;
     }),
+  getLatestRecipes: publicProcedure.query(async ({ ctx }) => {
+    const latestRecipes = await ctx.db.query.recipes.findMany({
+      orderBy: desc(recipes.createdAt),
+      limit: 3,
+      with: {
+        source: true,
+      },
+    });
+    return latestRecipes;
+  }),
   createRecipe: publicProcedure
     .input(
       z.object({
