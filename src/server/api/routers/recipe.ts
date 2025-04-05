@@ -22,14 +22,13 @@ export const recipeRouter = createTRPCRouter({
       return recipe;
     }),
   getLatestRecipes: publicProcedure.query(async ({ ctx }) => {
-    const latestRecipes = await ctx.db.query.recipes.findMany({
+    return await ctx.db.query.recipes.findMany({
       orderBy: desc(recipes.createdAt),
       limit: 3,
       with: {
         source: true,
       },
     });
-    return latestRecipes;
   }),
   createRecipe: publicProcedure
     .input(
