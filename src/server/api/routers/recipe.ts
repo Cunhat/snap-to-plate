@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { type Recipe } from "@/lib/schemas";
+import type { AIRecipe, RecipeType } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
   getRecipe: publicProcedure
@@ -79,7 +79,7 @@ export const recipeRouter = createTRPCRouter({
         .replace("```json", "")
         .replace("```", "");
 
-      const recipe = (await JSON.parse(formattedResponse)) as Recipe;
+      const recipe = (await JSON.parse(formattedResponse)) as AIRecipe;
 
       // Create source
       const createSource = await ctx.db

@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import RecentRecipes from "@/modules/home/ui/components/recent-recipes";
-import VideoUrlInput from "@/modules/home/ui/components/video-url-input";
 import { ChevronRight } from "lucide-react";
 
 export default function DescriptionHeroBanner() {

@@ -103,23 +103,23 @@ export default function SavedRecipes() {
               </TabsList>
               <TabsContent value="all" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {savedRecipes.map((recipe) => (
+                  {/* {savedRecipes.map((recipe) => (
                     <RecipeCard key={recipe.id} {...recipe} />
-                  ))}
+                  ))} */}
                 </div>
               </TabsContent>
               <TabsContent value="recent" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {savedRecipes.slice(0, 2).map((recipe) => (
+                  {/* {savedRecipes.slice(0, 2).map((recipe) => (
                     <RecipeCard key={recipe.id} {...recipe} />
-                  ))}
+                  ))} */}
                 </div>
               </TabsContent>
               <TabsContent value="favorites" className="mt-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {savedRecipes.slice(0, 1).map((recipe) => (
+                  {/* {savedRecipes.slice(0, 1).map((recipe) => (
                     <RecipeCard key={recipe.id} {...recipe} />
-                  ))}
+                  ))} */}
                 </div>
               </TabsContent>
             </Tabs>
