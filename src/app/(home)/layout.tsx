@@ -1,9 +1,10 @@
+import { buttonVariants } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import "@/styles/globals.css";
 import { Utensils } from "lucide-react";
 import { type Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -14,9 +15,9 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { data: session, error } = await authClient.getSession();
-
-  console.log(session);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -43,7 +44,9 @@ export default async function RootLayout({
                 </Link>
               </>
             )}
-            <Button size="sm">Sign In</Button>
+            <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
+              Sign In
+            </Link>
           </nav>
         </div>
       </header>
