@@ -3,6 +3,7 @@ import { Utensils } from "lucide-react";
 import { type Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -10,9 +11,13 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const { data: session, error } = await authClient.getSession();
+
+  console.log(session);
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
@@ -22,18 +27,22 @@ export default function RootLayout({
             <span className="text-xl font-bold">SnapToPlate</span>
           </Link>
           <nav className="flex items-center gap-4">
-            <Link
-              href="/savedRecipes"
-              className="text-sm font-medium hover:underline"
-            >
-              Saved Recipes
-            </Link>
-            <Link
-              href="/categories"
-              className="text-sm font-medium hover:underline"
-            >
-              Categories
-            </Link>
+            {session && (
+              <>
+                <Link
+                  href="/savedRecipes"
+                  className="text-sm font-medium hover:underline"
+                >
+                  Saved Recipes
+                </Link>
+                <Link
+                  href="/categories"
+                  className="text-sm font-medium hover:underline"
+                >
+                  Categories
+                </Link>
+              </>
+            )}
             <Button size="sm">Sign In</Button>
           </nav>
         </div>
