@@ -28,6 +28,7 @@ import {
 import { api } from "@/trpc/react";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -59,7 +60,8 @@ export default function SignUpView() {
     },
   });
 
-  const { mutate, isPending, error, isError } = api.auth.signUp.useMutation();
+  const { mutate, isPending, error, isError, isSuccess } =
+    api.auth.signUp.useMutation();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     mutate(data);
@@ -70,6 +72,12 @@ export default function SignUpView() {
       form.setError("email", { message: error.message });
     }
   }, [isError, error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      redirect("/savedRecipes");
+    }
+  }, [isSuccess]);
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
@@ -156,7 +164,6 @@ export default function SignUpView() {
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  {/* <Checkbox id="terms" /> */}
                   <FormField
                     control={form.control}
                     name="terms"

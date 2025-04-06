@@ -26,9 +26,7 @@ export const authRouter = createTRPCRouter({
         },
         {
           onRequest: (ctx) => {},
-          onSuccess: (ctx) => {
-            redirect("/savedRecipes");
-          },
+          onSuccess: (ctx) => {},
           onError: (ctx) => {
             throw new TRPCError({
               code: "UNPROCESSABLE_CONTENT",
@@ -37,5 +35,7 @@ export const authRouter = createTRPCRouter({
           },
         },
       );
+
+      return signUp;
     }),
 });
