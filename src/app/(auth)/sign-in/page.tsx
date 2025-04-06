@@ -11,13 +11,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Utensils } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Sign In - SnapToPlate",
   description: "Sign in to your SnapToPlate account",
 };
 
-export default function Page() {
+export default async function Page() {
+  const signIn = async (formData: FormData) => {
+    "use server";
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    const signIn = await auth.api.signInEmail({
+      body: {
+        email: email as string,
+        password: password as string,
+      },
+    });
+
+    console.log(signIn);
+    redirect("/savedRecipes");
+  };
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
       <Link href="/" className="mb-8 flex items-center gap-2">
@@ -34,49 +54,53 @@ export default function Page() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="space-y-1">
-              <label
-                htmlFor="email"
-                className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
-                className="h-11"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
+          <form action={signIn}>
+            <div className="space-y-3">
+              <div className="space-y-1">
                 <label
-                  htmlFor="password"
+                  htmlFor="email"
                   className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Password
+                  Email
                 </label>
-                <Link
+                <Input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  className="h-11"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Password
+                  </label>
+                  {/* <Link
                   href="/forgot-password"
                   className="text-primary text-sm hover:underline"
                 >
                   Forgot password?
-                </Link>
+                </Link> */}
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  className="h-11"
+                  required
+                />
               </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="h-11"
-                required
-              />
+              <Button type="submit" className="h-11 w-full">
+                Sign In
+              </Button>
             </div>
-            <Button type="submit" className="h-11 w-full">
-              Sign In
-            </Button>
-          </div>
+          </form>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />

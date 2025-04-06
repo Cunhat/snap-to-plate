@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import "@/styles/globals.css";
 import { Utensils } from "lucide-react";
@@ -18,6 +18,15 @@ export default async function RootLayout({
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  const signOut = async () => {
+    "use server";
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+  };
+
+  console.log(session);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -44,9 +53,13 @@ export default async function RootLayout({
                 </Link>
               </>
             )}
-            <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
-              Sign In
-            </Link>
+            {!session ? (
+              <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
+                Sign In
+              </Link>
+            ) : (
+              <Button formAction={signOut}>Sign Out</Button>
+            )}
           </nav>
         </div>
       </header>

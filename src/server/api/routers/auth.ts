@@ -38,4 +38,9 @@ export const authRouter = createTRPCRouter({
 
       return signUp;
     }),
+  emailSignIn: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { email, password } = input;
+    }),
 });
