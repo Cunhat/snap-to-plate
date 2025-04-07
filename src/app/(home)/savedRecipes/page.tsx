@@ -6,6 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Utensils, FolderPlus, Search, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import RecipeCard from "@/components/recipe-card";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 // Mock data for saved recipes
 const savedRecipes = [
@@ -48,7 +51,15 @@ const categories = [
   { name: "Snacks", count: 1 },
 ];
 
-export default function SavedRecipes() {
+export default async function SavedRecipes() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/");
+  }
+
   return (
     <main className="flex-1 py-8">
       <div className="container px-4 md:px-6">

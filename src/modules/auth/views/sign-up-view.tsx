@@ -15,20 +15,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Utensils } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
-
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { api } from "@/trpc/react";
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {

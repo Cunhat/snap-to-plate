@@ -58,7 +58,9 @@ export default async function RootLayout({
                 Sign In
               </Link>
             ) : (
-              <Button formAction={signOut}>Sign Out</Button>
+              <form action={signOut}>
+                <Button type="submit">Sign Out</Button>
+              </form>
             )}
           </nav>
         </div>

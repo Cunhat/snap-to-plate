@@ -1,9 +1,7 @@
-import { publicProcedure } from "../trpc";
-import { z } from "zod";
-import { createTRPCRouter } from "../trpc";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const authRouter = createTRPCRouter({
   signUp: publicProcedure
@@ -37,10 +35,5 @@ export const authRouter = createTRPCRouter({
       );
 
       return signUp;
-    }),
-  emailSignIn: publicProcedure
-    .input(z.object({ email: z.string(), password: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { email, password } = input;
     }),
 });
