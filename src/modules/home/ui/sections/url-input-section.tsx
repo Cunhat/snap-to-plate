@@ -1,4 +1,4 @@
-import VideoUrlInput from "../components/video-url-input";
+import VideoUrlInput from "@/components/video-url-input";
 
 export default async function UrlInput() {
   return (

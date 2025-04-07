@@ -26,13 +26,14 @@ export default async function RootLayout({
     });
   };
 
-  console.log(session);
-
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
         <div className="container flex items-center justify-between py-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link
+            href={session ? "/savedRecipes" : "/"}
+            className="flex items-center gap-2"
+          >
             <Utensils className="text-primary h-6 w-6" />
             <span className="text-xl font-bold">SnapToPlate</span>
           </Link>

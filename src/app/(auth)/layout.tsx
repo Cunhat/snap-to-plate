@@ -3,7 +3,7 @@ import { Utensils } from "lucide-react";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
-      {children}{" "}
+      {children}
       <footer className="border-t py-4 md:py-6">
         <div className="container flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2">

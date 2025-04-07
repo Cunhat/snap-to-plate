@@ -28,6 +28,7 @@ export const recipes = createTable("recipes", {
   tags: text().array(),
   nutritionId: integer().references(() => nutrition.id),
   sourceId: integer().references(() => source.id),
+  tokens: integer().default(0),
 });
 
 export const nutrition = createTable("nutrition", {
@@ -72,6 +73,7 @@ export const user = createTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
+  recipes: integer().array(),
 });
 
 export const session = createTable("session", {
