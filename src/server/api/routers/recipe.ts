@@ -1,12 +1,12 @@
 import { env } from "@/env";
 import { prompt } from "@/lib/utils";
-import { nutrition, recipes, source } from "@/server/db/schema";
+import { nutrition, recipes, source, user } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { AIRecipe, RecipeType } from "@/lib/schemas";
+import type { AIRecipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
   getRecipe: publicProcedure
@@ -37,8 +37,6 @@ export const recipeRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(input.videoUrl);
-
       const checkIfSourceExists = await ctx.db.query.source.findFirst({
         where: eq(source.url, input.videoUrl),
       });
@@ -132,6 +130,23 @@ export const recipeRouter = createTRPCRouter({
           nutritionId: createNutrition[0].id,
         })
         .returning();
+
+      if (ctx.session) {
+        console.log(ctx.session.user.id);
+        const currentUser = await ctx.db.query.user.findFirst({
+          where: eq(user.id, ctx.session.user.id),
+        });
+
+        const updatedRecipes = currentUser?.recipes ?? [];
+        updatedRecipes.push(createdRecipe[0]!.id);
+
+        await ctx.db
+          .update(user)
+          .set({
+            recipes: updatedRecipes,
+          })
+          .where(eq(user.id, ctx.session.user.id));
+      }
 
       return createdRecipe[0];
     }),

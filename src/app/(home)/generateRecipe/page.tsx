@@ -1,7 +1,5 @@
-import VideoUrlInput from "@/components/video-url-input";
-import UrlInput from "@/modules/home/ui/sections/url-input-section";
-import React from "react";
+import UrlInput from "@/components/url-input-section";
 
-export default function Page() {
+export default async function Page() {
   return <UrlInput />;
 }
