@@ -1,9 +1,6 @@
-import { Search } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CookingPot } from "lucide-react";
-import React from "react";
-import NewRecipeDialog from "../components/new-recipe-dialog";
+import { CookingPot, Search } from "lucide-react";
 import Link from "next/link";
 
 export default function SavedRecipesHeader() {

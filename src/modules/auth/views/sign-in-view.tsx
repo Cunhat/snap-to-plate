@@ -176,7 +176,7 @@ export default function SignInView() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <div className="text-center text-sm">
-            Don't have an account?{" "}
+            {"Don't have an account?"}
             <Link href="/sign-up" className="text-primary hover:underline">
               Sign up
             </Link>
