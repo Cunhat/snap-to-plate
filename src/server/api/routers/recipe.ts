@@ -1,6 +1,12 @@
 import { env } from "@/env";
 import { prompt } from "@/lib/utils";
-import { nutrition, recipes, source, user } from "@/server/db/schema";
+import {
+  nutrition,
+  recipes,
+  source,
+  user,
+  userRecipes,
+} from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
@@ -132,20 +138,10 @@ export const recipeRouter = createTRPCRouter({
         .returning();
 
       if (ctx.session) {
-        console.log(ctx.session.user.id);
-        const currentUser = await ctx.db.query.user.findFirst({
-          where: eq(user.id, ctx.session.user.id),
+        await ctx.db.insert(userRecipes).values({
+          userId: ctx.session.user.id,
+          recipeId: createdRecipe[0]!.id,
         });
-
-        const updatedRecipes = currentUser?.recipes ?? [];
-        updatedRecipes.push(createdRecipe[0]!.id);
-
-        await ctx.db
-          .update(user)
-          .set({
-            recipes: updatedRecipes,
-          })
-          .where(eq(user.id, ctx.session.user.id));
       }
 
       return createdRecipe[0];

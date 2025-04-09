@@ -73,7 +73,6 @@ export const user = createTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-  recipes: integer().array(),
 });
 
 export const session = createTable("session", {
@@ -115,3 +114,29 @@ export const verification = createTable("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
+export const userRecipes = createTable("user_recipes", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  recipeId: integer("recipe_id")
+    .notNull()
+    .references(() => recipes.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const userRelations = relations(user, ({ many }) => ({
+  recipes: many(userRecipes),
+}));
+
+export const userRecipesRelations = relations(userRecipes, ({ one }) => ({
+  user: one(user, {
+    fields: [userRecipes.userId],
+    references: [user.id],
+  }),
+  recipe: one(recipes, {
+    fields: [userRecipes.recipeId],
+    references: [recipes.id],
+  }),
+}));

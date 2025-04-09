@@ -23,8 +23,6 @@ export const authRouter = createTRPCRouter({
           name: `${firstName} ${lastName}`, // user display name
         },
         {
-          // onRequest: (ctx) => {},
-          // onSuccess: (ctx) => {},
           onError: (ctx) => {
             throw new TRPCError({
               code: "UNPROCESSABLE_CONTENT",
