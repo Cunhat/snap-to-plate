@@ -138,10 +138,15 @@ export const recipeRouter = createTRPCRouter({
         .returning();
 
       if (ctx.session) {
-        await ctx.db.insert(userRecipes).values({
-          userId: ctx.session.user.id,
-          recipeId: createdRecipe[0]!.id,
-        });
+        try {
+          await ctx.db.insert(userRecipes).values({
+            userId: ctx.session.user.id,
+            recipeId: createdRecipe[0]!.id,
+          });
+        } catch (error) {
+          console.error("Failed to associate recipe with user:", error);
+          // Continue execution as the recipe was still created successfully
+        }
       }
 
       return createdRecipe[0];
