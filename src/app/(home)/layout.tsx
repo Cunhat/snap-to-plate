@@ -1,8 +1,10 @@
+import { Button, buttonVariants } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import "@/styles/globals.css";
 import { Utensils } from "lucide-react";
 import { type Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -10,31 +12,57 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const signOut = async () => {
+    "use server";
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
         <div className="container flex items-center justify-between py-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link
+            href={session ? "/savedRecipes" : "/"}
+            className="flex items-center gap-2"
+          >
             <Utensils className="text-primary h-6 w-6" />
             <span className="text-xl font-bold">SnapToPlate</span>
           </Link>
           <nav className="flex items-center gap-4">
-            <Link
-              href="/savedRecipes"
-              className="text-sm font-medium hover:underline"
-            >
-              Saved Recipes
-            </Link>
-            <Link
-              href="/categories"
-              className="text-sm font-medium hover:underline"
-            >
-              Categories
-            </Link>
-            <Button size="sm">Sign In</Button>
+            {session && (
+              <>
+                <Link
+                  href="/savedRecipes"
+                  className="text-sm font-medium hover:underline"
+                >
+                  Saved Recipes
+                </Link>
+                <Link
+                  href="/categories"
+                  className="text-sm font-medium hover:underline"
+                >
+                  Categories
+                </Link>
+              </>
+            )}
+            {!session ? (
+              <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
+                Sign In
+              </Link>
+            ) : (
+              <form action={signOut}>
+                <Button type="submit">Sign Out</Button>
+              </form>
+            )}
           </nav>
         </div>
       </header>

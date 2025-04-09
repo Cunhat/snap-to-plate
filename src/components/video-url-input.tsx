@@ -1,32 +1,33 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { api } from "@/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { User } from "better-auth";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const VideoUrlInputSchema = z.object({
   url: z.string().url(),
 });
 
-export default function VideoUrlInput() {
+type VideoUrlInputProps = {
+  user: User | undefined;
+};
+
+export default function VideoUrlInput({ user }: VideoUrlInputProps) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof VideoUrlInputSchema>>({
@@ -38,7 +39,6 @@ export default function VideoUrlInput() {
 
   const { mutate, isPending } = api.recipe.createRecipe.useMutation({
     onSuccess: (data) => {
-      console.log(data);
       router.push(`/recipe/${data?.id}`);
     },
   });
@@ -47,7 +47,6 @@ export default function VideoUrlInput() {
     formData: z.infer<typeof VideoUrlInputSchema>,
   ) => {
     try {
-      console.log(formData.url);
       mutate({ videoUrl: formData.url });
     } catch (error) {
       console.error("Error:", error);

@@ -1,12 +1,18 @@
 import { env } from "@/env";
 import { prompt } from "@/lib/utils";
-import { nutrition, recipes, source } from "@/server/db/schema";
+import {
+  nutrition,
+  recipes,
+  source,
+  user,
+  userRecipes,
+} from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { AIRecipe, RecipeType } from "@/lib/schemas";
+import type { AIRecipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
   getRecipe: publicProcedure
@@ -37,8 +43,6 @@ export const recipeRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(input.videoUrl);
-
       const checkIfSourceExists = await ctx.db.query.source.findFirst({
         where: eq(source.url, input.videoUrl),
       });
@@ -132,6 +136,18 @@ export const recipeRouter = createTRPCRouter({
           nutritionId: createNutrition[0].id,
         })
         .returning();
+
+      if (ctx.session) {
+        try {
+          await ctx.db.insert(userRecipes).values({
+            userId: ctx.session.user.id,
+            recipeId: createdRecipe[0]!.id,
+          });
+        } catch (error) {
+          console.error("Failed to associate recipe with user:", error);
+          // Continue execution as the recipe was still created successfully
+        }
+      }
 
       return createdRecipe[0];
     }),

@@ -1,6 +1,12 @@
-import VideoUrlInput from "../components/video-url-input";
+import VideoUrlInput from "@/components/video-url-input";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function UrlInput() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <section className="py-12 md:py-16">
       <div className="container px-4 md:px-6">
@@ -13,7 +19,7 @@ export default async function UrlInput() {
               Works with YouTube, Instagram, and TikTok cooking videos
             </p>
           </div>
-          <VideoUrlInput />
+          <VideoUrlInput user={session?.user} />
         </div>
       </div>
     </section>
