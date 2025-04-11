@@ -11,7 +11,7 @@ import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import type { AIRecipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
@@ -151,4 +151,12 @@ export const recipeRouter = createTRPCRouter({
 
       return createdRecipe[0];
     }),
+  getUserRecipes: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.userRecipes.findMany({
+      where: eq(userRecipes.userId, ctx.session?.user.id ?? ""),
+      with: {
+        recipe: true,
+      },
+    });
+  }),
 });

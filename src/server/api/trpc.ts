@@ -13,6 +13,8 @@ import { ZodError } from "zod";
 import { db } from "@/server/db";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { eq } from "drizzle-orm";
+import { user } from "../db/schema";
 
 /**
  * 1. CONTEXT
@@ -107,9 +109,23 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
 export const protectedProcedure = t.procedure.use(async ({ next, ctx }) => {
   if (!ctx.session) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
-  return next();
+
+  const userInfo = await ctx.db.query.user.findFirst({
+    where: eq(user.id, ctx.session.user.id),
+  });
+
+  if (!userInfo) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({
+    ctx: {
+      user: userInfo,
+    },
+  });
 });
