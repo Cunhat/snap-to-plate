@@ -155,7 +155,11 @@ export const recipeRouter = createTRPCRouter({
     return await ctx.db.query.userRecipes.findMany({
       where: eq(userRecipes.userId, ctx.session?.user.id ?? ""),
       with: {
-        recipe: true,
+        recipe: {
+          with: {
+            source: true,
+          },
+        },
       },
     });
   }),
