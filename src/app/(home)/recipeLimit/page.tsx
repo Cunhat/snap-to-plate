@@ -23,8 +23,9 @@ export default function RateLimitedPage() {
         </CardHeader>
         <CardContent className="space-y-4 text-center">
           <p className="text-muted-foreground">
-            You've reached the limit of 1 recipe generation per day. Our AI chef
-            needs a short break!
+            {
+              "You've reached the limit of 1 recipe generation per day. Our AI chef needs a short break!"
+            }
           </p>
 
           <div className="py-4">
