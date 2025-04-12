@@ -31,8 +31,9 @@ export default function NotFoundPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-center">
             <p className="text-muted-foreground">
-              Oops! It looks like the recipe you're looking for has gone missing
-              from our kitchen.
+              {
+                " Oops! It looks like the recipe you're looking for has gone missing from our kitchen."
+              }
             </p>
 
             <div className="py-4">

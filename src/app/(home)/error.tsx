@@ -31,8 +31,9 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
         </CardHeader>
         <CardContent className="space-y-4 text-center">
           <p className="text-muted-foreground">
-            We're sorry, but we encountered an unexpected error while processing
-            your request.
+            {
+              "We're sorry, but we encountered an unexpected error while processing your request."
+            }
           </p>
 
           {error.digest && (

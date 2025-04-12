@@ -43,7 +43,7 @@ export default function VideoUrlInput({ user }: VideoUrlInputProps) {
     },
     onError: (error) => {
       if (error.data?.code === "TOO_MANY_REQUESTS") {
-        router.push("/sign-in");
+        router.push("/recipeLimit");
       }
     },
   });

@@ -1,5 +1,4 @@
 "use client";
-import RateLimited from "@/components/errors/rate-limited";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,19 +17,7 @@ import {
   Youtube,
 } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 dayjs.extend(duration);
-
-// export function RecipeSection({ id }: { id: string }) {
-//   return (
-//     // <ErrorBoundary fallback={<RateLimited />}>
-//     // <Suspense fallback={<div>Loading...</div>}>
-//     <RecipeSectionSuspense id={id} />
-//     // </Suspense>
-//     // </ErrorBoundary>
-//   );
-// }
 
 export function RecipeSection({ id }: { id: string }) {
   const [recipe] = api.recipe.getRecipe.useSuspenseQuery({ id });
