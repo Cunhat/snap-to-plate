@@ -1,4 +1,5 @@
 "use client";
+import RateLimited from "@/components/errors/rate-limited";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,18 +19,20 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-
+import { ErrorBoundary } from "react-error-boundary";
 dayjs.extend(duration);
 
-export function RecipeSection({ id }: { id: string }) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <RecipeSectionSuspense id={id} />
-    </Suspense>
-  );
-}
+// export function RecipeSection({ id }: { id: string }) {
+//   return (
+//     // <ErrorBoundary fallback={<RateLimited />}>
+//     // <Suspense fallback={<div>Loading...</div>}>
+//     <RecipeSectionSuspense id={id} />
+//     // </Suspense>
+//     // </ErrorBoundary>
+//   );
+// }
 
-function RecipeSectionSuspense({ id }: { id: string }) {
+export function RecipeSection({ id }: { id: string }) {
   const [recipe] = api.recipe.getRecipe.useSuspenseQuery({ id });
 
   if (!recipe) {
@@ -203,61 +206,6 @@ function RecipeSectionSuspense({ id }: { id: string }) {
                 </div>
               </CardContent>
             </Card>
-
-            {/* <Card>
-              <CardContent className="p-4">
-                <h3 className="mb-3 font-semibold">Adjust Servings</h3>
-                <div className="flex items-center">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 rounded-full"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-4 w-4"
-                    >
-                      <path d="M5 12h14" />
-                    </svg>
-                    <span className="sr-only">Decrease</span>
-                  </Button>
-                  <span className="mx-4 text-lg font-medium">
-                    {recipe.servings}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8 rounded-full"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-4 w-4"
-                    >
-                      <path d="M5 12h14" />
-                      <path d="M12 5v14" />
-                    </svg>
-                    <span className="sr-only">Increase</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card> */}
-
             <Card>
               <CardContent className="p-4">
                 <h3 className="mb-3 font-semibold">Similar Recipes</h3>

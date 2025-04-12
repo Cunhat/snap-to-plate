@@ -10,12 +10,13 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@/server/db";
-import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 import { user } from "../db/schema";
-
+import { ratelimit, rateLimitByIp } from "@/lib/redis";
+import { redirect } from "next/navigation";
 /**
  * 1. CONTEXT
  *
@@ -101,14 +102,29 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
-/**
- * Public (unauthenticated) procedure
- *
- * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
- * guarantee that a user querying is authorized, but you can still access user session data if they
- * are logged in.
- */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(async ({ next, ctx }) => {
+  const { success } = await ratelimit.limit("anonymous");
+
+  if (!success) {
+    throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+  }
+
+  return next({ ctx });
+});
+
+export const generateRecipeProcedure = t.procedure.use(
+  async ({ next, ctx }) => {
+    if (!ctx.session) {
+      const { success } = await rateLimitByIp.limit("ip-address");
+
+      if (!success) {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      }
+    }
+
+    return next({ ctx });
+  },
+);
 
 export const protectedProcedure = t.procedure.use(async ({ next, ctx }) => {
   if (!ctx.session) {
@@ -121,6 +137,12 @@ export const protectedProcedure = t.procedure.use(async ({ next, ctx }) => {
 
   if (!userInfo) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const { success } = await ratelimit.limit(ctx.session.user.id);
+
+  if (!success) {
+    throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
   }
 
   return next({

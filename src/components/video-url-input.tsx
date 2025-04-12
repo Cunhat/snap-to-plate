@@ -41,6 +41,11 @@ export default function VideoUrlInput({ user }: VideoUrlInputProps) {
     onSuccess: (data) => {
       router.push(`/recipe/${data?.id}`);
     },
+    onError: (error) => {
+      if (error.data?.code === "TOO_MANY_REQUESTS") {
+        router.push("/sign-in");
+      }
+    },
   });
 
   const handleSubmit = async (

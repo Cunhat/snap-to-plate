@@ -11,7 +11,12 @@ import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  generateRecipeProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 import type { AIRecipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
@@ -36,7 +41,7 @@ export const recipeRouter = createTRPCRouter({
       },
     });
   }),
-  createRecipe: publicProcedure
+  createRecipe: generateRecipeProcedure
     .input(
       z.object({
         videoUrl: z.string(),
