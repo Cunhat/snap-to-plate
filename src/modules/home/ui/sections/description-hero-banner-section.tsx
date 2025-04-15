@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRight } from "lucide-react";
 
 export default function DescriptionHeroBanner() {
   return (
@@ -18,7 +16,7 @@ export default function DescriptionHeroBanner() {
                 nutritional information.
               </p>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
+            {/* <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Button size="lg" className="gap-1">
                 Get Started <ChevronRight className="h-4 w-4" />
               </Button>
@@ -29,9 +27,9 @@ export default function DescriptionHeroBanner() {
               >
                 How It Works
               </Button>
-            </div>
+            </div> */}
           </div>
-          <Card className="overflow-hidden shadow-lg">
+          <Card className="overflow-hidden py-0 shadow-lg">
             <CardContent className="p-0">
               <img
                 alt="Cooking video being transformed into a recipe"
