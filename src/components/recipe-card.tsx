@@ -1,5 +1,5 @@
 "use client";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { RecipeType } from "@/lib/schemas";
 import { Clock, Flame, Bookmark, BookmarkCheck } from "lucide-react";
@@ -7,6 +7,7 @@ import { useState } from "react";
 import Link from "next/link";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { getRelativeTime } from "@/lib/utils";
 
 dayjs.extend(duration);
 interface RecipeCardProps {
@@ -56,7 +57,7 @@ const RecipeCard = ({ recipe, canSave = false }: RecipeCardProps) => {
           <img
             src={recipe.image ?? "/placeholder.svg"}
             alt={recipe.title ?? ""}
-            className="h-48 w-full object-cover"
+            className="h-52 w-full object-cover"
           />
           {canSave && (
             <div className="absolute top-2 right-2">
@@ -78,7 +79,20 @@ const RecipeCard = ({ recipe, canSave = false }: RecipeCardProps) => {
             </div>
           )}
         </div>
-        <div className="p-4">
+        <CardContent className="p-4">
+          <div className="mb-2 flex items-center gap-2">
+            {/* <img
+              src={recipe.user.avatar || "/placeholder.svg"}
+              alt={recipe.user.name}
+              className="h-6 w-6 rounded-full object-cover"
+            /> */}
+            <span className="text-muted-foreground text-sm">
+              {recipe.source?.channel}
+            </span>
+            <span className="text-muted-foreground ml-auto text-xs">
+              {getRelativeTime(recipe.createdAt)}
+            </span>
+          </div>
           <h3 className="font-heading mb-2 line-clamp-1 text-lg font-bold">
             {recipe.title}
           </h3>
@@ -102,7 +116,7 @@ const RecipeCard = ({ recipe, canSave = false }: RecipeCardProps) => {
               </Badge> */}
             </div>
           </div>
-        </div>
+        </CardContent>
       </Card>
     </Link>
   );

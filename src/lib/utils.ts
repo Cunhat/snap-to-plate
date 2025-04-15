@@ -59,3 +59,27 @@ ${videoUrl}
 11. **Response Format**: This is very important and mandatory, the response must be only the JSON object, nothing else.
 12. **Image**: Is really important to get the video thumbnail as the image.
 `;
+
+export function getRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffInMilliseconds = now.getTime() - date.getTime();
+  const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  if (diffInDays > 0) {
+    return `${diffInDays} ${diffInDays === 1 ? "day" : "days"} ago`;
+  }
+  if (diffInHours > 0) {
+    return `${diffInHours} ${diffInHours === 1 ? "hour" : "hours"} ago`;
+  }
+  if (diffInMinutes > 0) {
+    return `${diffInMinutes} ${diffInMinutes === 1 ? "minute" : "minutes"} ago`;
+  }
+  if (diffInSeconds > 0) {
+    return `${diffInSeconds} ${diffInSeconds === 1 ? "second" : "seconds"} ago`;
+  }
+
+  return "just now";
+}
