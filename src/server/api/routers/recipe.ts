@@ -9,7 +9,7 @@ import {
 } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -28,6 +28,11 @@ export const recipeRouter = createTRPCRouter({
         with: {
           source: true,
           nutrition: true,
+          savedByUsers: {
+            with: {
+              user: true,
+            },
+          },
         },
       });
       return recipe;
@@ -168,4 +173,54 @@ export const recipeRouter = createTRPCRouter({
       },
     });
   }),
+  saveRecipe: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const checkIfRecipeExists = await ctx.db.query.recipes.findFirst({
+        where: eq(recipes.id, input.id),
+      });
+
+      if (!checkIfRecipeExists) {
+        return new TRPCError({
+          code: "NOT_FOUND",
+          message: "Recipe not found",
+        });
+      }
+
+      const checkIfUserRecipeExists = await ctx.db.query.userRecipes.findFirst({
+        where: and(
+          eq(userRecipes.userId, ctx.session?.user.id ?? ""),
+          eq(userRecipes.recipeId, input.id),
+        ),
+      });
+
+      if (checkIfUserRecipeExists) {
+        return new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Recipe already saved",
+        });
+      }
+
+      const saved = await ctx.db
+        .insert(userRecipes)
+        .values({
+          userId: ctx.session?.user.id ?? "",
+          recipeId: input.id,
+        })
+        .returning();
+
+      return saved;
+    }),
+  removeFromSavedRecipes: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .delete(userRecipes)
+        .where(
+          and(
+            eq(userRecipes.userId, ctx.session?.user.id ?? ""),
+            eq(userRecipes.recipeId, input.id),
+          ),
+        );
+    }),
 });

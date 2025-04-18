@@ -54,7 +54,7 @@ export const source = createTable("source", {
   channel: text(),
 });
 
-export const recipeRelations = relations(recipes, ({ one }) => ({
+export const recipeRelations = relations(recipes, ({ one, many }) => ({
   nutrition: one(nutrition, {
     fields: [recipes.nutritionId],
     references: [nutrition.id],
@@ -63,6 +63,7 @@ export const recipeRelations = relations(recipes, ({ one }) => ({
     fields: [recipes.sourceId],
     references: [source.id],
   }),
+  savedByUsers: many(userRecipes),
 }));
 
 export const user = createTable("user", {
