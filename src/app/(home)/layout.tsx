@@ -38,6 +38,12 @@ export default async function RootLayout({
             <span className="text-xl font-bold">SnapToPlate</span>
           </Link>
           <nav className="flex items-center gap-4">
+            <Link
+              href="/generateRecipe"
+              className="text-sm font-medium hover:underline"
+            >
+              Generate Recipe
+            </Link>
             {session && (
               <>
                 <Link
@@ -45,12 +51,6 @@ export default async function RootLayout({
                   className="text-sm font-medium hover:underline"
                 >
                   Saved Recipes
-                </Link>
-                <Link
-                  href="/categories"
-                  className="text-sm font-medium hover:underline"
-                >
-                  Categories
                 </Link>
               </>
             )}
