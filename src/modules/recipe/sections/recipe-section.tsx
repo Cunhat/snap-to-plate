@@ -17,21 +17,29 @@ import {
   Youtube,
 } from "lucide-react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import RecipeActions from "../components/recipe-action";
+
 dayjs.extend(duration);
 
 export function RecipeSection({ id }: { id: string }) {
   const [recipe] = api.recipe.getRecipe.useSuspenseQuery({ id });
+  const session = authClient.useSession();
 
   if (!recipe) {
     return <div>Recipe not found</div>;
   }
+
+  const isSavedByUser = recipe.savedByUsers.some(
+    (savedByUser) => savedByUser.userId === session?.data?.user.id,
+  );
 
   return (
     <main className="flex-1 py-8">
       <div className="container px-4 md:px-6">
         <div className="mb-6">
           <Link
-            href="/"
+            href={session.data?.user.id ? "/savedRecipes" : "/"}
             className="text-muted-foreground hover:text-foreground inline-flex items-center text-sm font-medium"
           >
             <ArrowLeft className="mr-1 h-4 w-4" />
@@ -136,10 +144,11 @@ export function RecipeSection({ id }: { id: string }) {
 
           <div className="space-y-6">
             <div className="flex flex-col gap-3">
-              <Button className="w-full gap-2">
-                <BookmarkPlus className="h-4 w-4" />
-                Save Recipe
-              </Button>
+              <RecipeActions
+                isSavedByUser={isSavedByUser}
+                userId={session.data?.user.id ?? ""}
+                recipeId={recipe.id}
+              />
               <Button variant="outline" className="w-full gap-2">
                 <Share2 className="h-4 w-4" />
                 Share Recipe
