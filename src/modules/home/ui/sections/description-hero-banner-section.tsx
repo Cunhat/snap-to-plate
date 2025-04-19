@@ -1,5 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 
+/**
+ * Renders the hero banner section for SnapToPlate, featuring a headline, service description, and a visual card illustrating the transformation of cooking videos into recipes.
+ *
+ * @returns The hero banner React element for the landing page.
+ */
 export default function DescriptionHeroBanner() {
   return (
     <section className="from-accent to-background bg-gradient-to-b py-12 md:py-24">

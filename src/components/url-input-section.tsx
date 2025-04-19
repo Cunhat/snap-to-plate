@@ -2,6 +2,11 @@ import VideoUrlInput from "@/components/video-url-input";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+/**
+ * Renders a section with a heading and a video URL input for authenticated users.
+ *
+ * Retrieves the current user session and displays a form for submitting a YouTube video URL, passing the authenticated user to the input component if available.
+ */
 export default async function UrlInput() {
   const session = await auth.api.getSession({
     headers: await headers(),

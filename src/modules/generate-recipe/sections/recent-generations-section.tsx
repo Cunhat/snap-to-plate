@@ -5,6 +5,9 @@ import { api } from "@/trpc/react";
 import { ChevronRight } from "lucide-react";
 import { Suspense } from "react";
 
+/**
+ * Displays a section with recently generated recipes, showing a loading indicator while data is being fetched.
+ */
 export function RecentGenerationsSection() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -13,6 +16,11 @@ export function RecentGenerationsSection() {
   );
 }
 
+/**
+ * Displays a paginated grid of recently generated recipes with a "View More" button to load additional recipes.
+ *
+ * Fetches and displays the latest recipes in pages of six, allowing users to load more results if available.
+ */
 function RecentGenerationsSectionSuspense() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     api.recipe.getLatestRecipes.useInfiniteQuery(

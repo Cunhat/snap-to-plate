@@ -27,6 +27,13 @@ type VideoUrlInputProps = {
   user: User | undefined;
 };
 
+/**
+ * Renders a form for submitting a YouTube video URL to generate a recipe.
+ *
+ * Validates the input URL and, upon submission, attempts to create a recipe from the provided video. Redirects to the generated recipe page on success, or to a limit notification page if the user has exceeded their recipe creation quota.
+ *
+ * @param user - The current user, or undefined if not authenticated.
+ */
 export default function VideoUrlInput({ user }: VideoUrlInputProps) {
   const router = useRouter();
 

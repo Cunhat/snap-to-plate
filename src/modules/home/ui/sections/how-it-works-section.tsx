@@ -1,6 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { CookingPot, Sparkles, TvMinimalPlay } from "lucide-react";
 
+/**
+ * Renders a section outlining the three-step process for generating a recipe from a YouTube cooking video.
+ *
+ * Displays a responsive grid with cards describing how users can paste a video URL, have AI analyze the video, and receive a complete recipe.
+ */
 export default function HowItWorksSection() {
   return (
     <section className="py-12 md:py-16">
