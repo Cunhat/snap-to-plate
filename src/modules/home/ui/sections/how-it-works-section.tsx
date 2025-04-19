@@ -16,7 +16,7 @@ export default function HowItWorksSection() {
               </h3>
               <p className="text-muted-foreground">
                 Simply paste the URL of your favorite cooking video from
-                YouTube, Instagram, or TikTok.
+                YouTube.
               </p>
             </div>
           </Card>

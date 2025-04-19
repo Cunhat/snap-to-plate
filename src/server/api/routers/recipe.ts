@@ -9,7 +9,7 @@ import {
 } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -37,15 +37,49 @@ export const recipeRouter = createTRPCRouter({
       });
       return recipe;
     }),
-  getLatestRecipes: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.recipes.findMany({
-      orderBy: desc(recipes.createdAt),
-      limit: 3,
-      with: {
-        source: true,
-      },
-    });
-  }),
+
+  // A cursor is a pointer to a specific record in the database that we use to efficiently fetch the next set of records. In our case, we're using the recipe's id as the cursor.
+  // Here's how it works:
+  // Initial Load (First Page):
+  // When the page first loads, we don't have a cursor
+  // We fetch the first 6 recipes (ordered by creation date, newest first)
+  // The API returns these recipes and the nextCursor (which is the ID of the last recipe)
+  // Loading More (Next Pages):
+  // When you click "View More", we send the last cursor we received
+  // The API uses this cursor to find recipes with IDs less than the cursor value
+  // This ensures we get the next set of recipes without missing any or getting duplicates
+  getLatestRecipes: publicProcedure
+    .input(
+      z.object({
+        cursor: z.number().nullish(),
+        limit: z.number().min(1).max(20).default(3),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input;
+
+      console.log("CURSOR", cursor);
+
+      const items = await ctx.db.query.recipes.findMany({
+        orderBy: desc(recipes.createdAt),
+        limit: limit + 1,
+        where: cursor ? and(lt(recipes.id, cursor)) : undefined,
+        with: {
+          source: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem!.id;
+      }
+
+      return {
+        items,
+        nextCursor,
+      };
+    }),
   createRecipe: generateRecipeProcedure
     .input(
       z.object({

@@ -75,7 +75,7 @@ export default function VideoUrlInput({ user }: VideoUrlInputProps) {
                     <FormLabel>Video URL</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Paste YouTube, Instagram, or TikTok URL here"
+                        placeholder="Paste YouTube video URL here"
                         {...field}
                       />
                     </FormControl>
