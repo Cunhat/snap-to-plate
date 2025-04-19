@@ -3,6 +3,11 @@ import React, { Suspense } from "react";
 import RecentRecipes from "../components/recent-recipes";
 import { api } from "@/trpc/react";
 
+/**
+ * Displays a section of recently generated recipes with a loading fallback using React Suspense.
+ *
+ * Shows a loading indicator while the latest recipes are being fetched and rendered.
+ */
 export function RecentRecipesSection() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -11,6 +16,11 @@ export function RecentRecipesSection() {
   );
 }
 
+/**
+ * Displays a section showcasing the three most recently generated recipes.
+ *
+ * Fetches the latest three recipes using a suspense-enabled query and renders them within a styled section.
+ */
 function RecentRecipesSectionSuspense() {
   const [data] = api.recipe.getLatestRecipes.useSuspenseQuery({
     limit: 3,

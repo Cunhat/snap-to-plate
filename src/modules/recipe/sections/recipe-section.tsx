@@ -22,6 +22,15 @@ import RecipeActions from "../components/recipe-action";
 
 dayjs.extend(duration);
 
+/**
+ * Displays detailed information about a recipe, including its title, description, tags, source, image, metadata, instructions, ingredients, and nutrition facts.
+ *
+ * Renders interactive controls for saving, sharing, and printing the recipe, and adapts navigation based on user authentication status.
+ *
+ * @param id - The unique identifier of the recipe to display.
+ *
+ * @returns The rendered recipe details view, or a "Recipe not found" message if the recipe does not exist.
+ */
 export function RecipeSection({ id }: { id: string }) {
   const [recipe] = api.recipe.getRecipe.useSuspenseQuery({ id });
   const session = authClient.useSession();
