@@ -1,11 +1,9 @@
 "use client";
 import RecipeCard from "@/components/recipe-card";
-import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import React, { Suspense } from "react";
 import { api } from "@/trpc/react";
+import { ChevronRight } from "lucide-react";
+import { Suspense } from "react";
 
 export function RecentGenerationsSection() {
   return (
@@ -16,7 +14,17 @@ export function RecentGenerationsSection() {
 }
 
 function RecentGenerationsSectionSuspense() {
-  const [recipes] = api.recipe.getLatestRecipes.useSuspenseQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    api.recipe.getLatestRecipes.useInfiniteQuery(
+      {
+        limit: 6,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      },
+    );
+
+  const recipes = data?.pages.flatMap((page) => page.items) ?? [];
 
   return (
     <div className="space-y-6">
@@ -28,11 +36,19 @@ function RecentGenerationsSectionSuspense() {
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>
-      <div className="flex justify-center">
-        <Button variant="outline" className="gap-1">
-          View More <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
+      {hasNextPage && (
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            className="gap-1"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+          >
+            {isFetchingNextPage ? "Loading..." : "View More"}{" "}
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

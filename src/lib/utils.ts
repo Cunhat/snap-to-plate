@@ -34,7 +34,7 @@ export interface Nutrition {
 }
 
 export interface Source {
-    platform: string; // Platform where the recipe was found (e.g., "YouTube")
+    platform: string; // Platform where the recipe was found (e.g., "YouTube", "Instagram", "TikTok")
     url:      string; // URL of the recipe source
     channel:  string; // Channel or creator name
 }

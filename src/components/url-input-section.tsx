@@ -13,11 +13,11 @@ export default async function UrlInput() {
         <div className="mx-auto max-w-3xl space-y-8">
           <div className="space-y-2 text-center">
             <h2 className="text-3xl font-bold tracking-tighter">
-              Paste a Video URL to Get Started
+              Paste a YouTube Video URL to Get Started
             </h2>
-            <p className="text-muted-foreground">
+            {/* <p className="text-muted-foreground">
               Works with YouTube, Instagram, and TikTok cooking videos
-            </p>
+            </p> */}
           </div>
           <VideoUrlInput user={session?.user} />
         </div>

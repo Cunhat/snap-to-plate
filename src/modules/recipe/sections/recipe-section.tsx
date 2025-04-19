@@ -174,35 +174,37 @@ export function RecipeSection({ id }: { id: string }) {
                   <div className="flex justify-between border-b py-1">
                     <span>Protein</span>
                     <span className="font-medium">
-                      {recipe.nutrition?.protein}
+                      {recipe.nutrition?.protein} g
                     </span>
                   </div>
                   <div className="flex justify-between border-b py-1">
                     <span>Carbs</span>
                     <span className="font-medium">
-                      {recipe.nutrition?.carbs}
+                      {recipe.nutrition?.carbs} g
                     </span>
                   </div>
                   <div className="flex justify-between border-b py-1">
                     <span>Fat</span>
-                    <span className="font-medium">{recipe.nutrition?.fat}</span>
+                    <span className="font-medium">
+                      {recipe.nutrition?.fat} g
+                    </span>
                   </div>
                   <div className="flex justify-between border-b py-1">
                     <span>Fiber</span>
                     <span className="font-medium">
-                      {recipe.nutrition?.fiber}
+                      {recipe.nutrition?.fiber} g
                     </span>
                   </div>
                   <div className="flex justify-between py-1">
                     <span>Sugar</span>
                     <span className="font-medium">
-                      {recipe.nutrition?.sugar}
+                      {recipe.nutrition?.sugar} g
                     </span>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            {/* <Card>
               <CardContent className="p-4">
                 <h3 className="mb-3 font-semibold">Similar Recipes</h3>
                 <div className="space-y-3">
@@ -247,7 +249,7 @@ export function RecipeSection({ id }: { id: string }) {
                   </Link>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </div>

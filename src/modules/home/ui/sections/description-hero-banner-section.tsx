@@ -11,9 +11,9 @@ export default function DescriptionHeroBanner() {
                 Turn Cooking Videos into Detailed Recipes
               </h1>
               <p className="text-muted-foreground md:text-xl">
-                SnapToPlate analyzes cooking videos from YouTube, Instagram, and
-                TikTok to create step-by-step recipes with ingredients and
-                nutritional information.
+                SnapToPlate analyzes cooking videos from YouTube to create
+                step-by-step recipes with ingredients and nutritional
+                information. Support for Instagram and TikTok is coming soon!
               </p>
             </div>
             {/* <div className="flex flex-col gap-2 min-[400px]:flex-row">

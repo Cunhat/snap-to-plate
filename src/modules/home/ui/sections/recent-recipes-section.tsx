@@ -12,7 +12,9 @@ export function RecentRecipesSection() {
 }
 
 function RecentRecipesSectionSuspense() {
-  const [recipes] = api.recipe.getLatestRecipes.useSuspenseQuery();
+  const [data] = api.recipe.getLatestRecipes.useSuspenseQuery({
+    limit: 3,
+  });
 
   return (
     <section className="bg-muted py-12 md:py-16">
@@ -25,7 +27,7 @@ function RecentRecipesSectionSuspense() {
             Check out these recipes recently created by our users
           </p>
         </div>
-        <RecentRecipes recipes={recipes} />
+        <RecentRecipes recipes={data.items} />
       </div>
     </section>
   );
