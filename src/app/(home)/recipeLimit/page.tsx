@@ -8,6 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Utensils, Clock, Home, UserPlus } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "SnapToPlate Recipe Limit",
+  description:
+    "You've reached the limit of 1 recipe generation per day. Our AI chef needs a short break!",
+};
 
 export default function RateLimitedPage() {
   return (

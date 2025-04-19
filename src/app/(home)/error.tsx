@@ -11,11 +11,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Utensils, RefreshCw, Home, AlertTriangle } from "lucide-react";
+import type { Metadata } from "next";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
+
+export const metadata: Metadata = {
+  title: "SnapToPlate Error",
+  description: "An error occurred while processing your request",
+};
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   return (
