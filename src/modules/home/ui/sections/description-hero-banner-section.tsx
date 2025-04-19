@@ -29,15 +29,15 @@ export default function DescriptionHeroBanner() {
               </Button>
             </div> */}
           </div>
-          <Card className="overflow-hidden py-0 shadow-lg">
-            <CardContent className="p-0">
-              <img
-                alt="Cooking video being transformed into a recipe"
-                className="aspect-video w-full object-cover"
-                src="/placeholder.svg?height=720&width=1280"
-              />
-            </CardContent>
-          </Card>
+          {/* <Card className="overflow-hidden bg-transparent py-0">
+            <CardContent className="p-0"> */}
+          <img
+            alt="Cooking video being transformed into a recipe"
+            className="aspect-video w-full object-cover"
+            src="https://2oooptzs26.ufs.sh/f/4ti4KJ0DJmje93LYYtEWuB6fApRtYicQMVGOdaFsPe1vkDo0"
+          />
+          {/* </CardContent>
+          </Card> */}
         </div>
       </div>
     </section>
