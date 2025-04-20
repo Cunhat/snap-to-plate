@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
+import Link from "next/link";
 import { Suspense } from "react";
 // Mock data for categories
 const categories = [
@@ -36,45 +37,24 @@ function SavedRecipesListSuspense() {
               key={category.name}
               variant={category.name === "All" ? "secondary" : "ghost"}
               className="w-full justify-start"
+              asChild
             >
-              {category.name}
-              <Badge variant="outline" className="ml-auto">
-                {category.count}
-              </Badge>
+              <Link href={`/savedRecipes?category=${category.name}`}>
+                {category.name}
+                <Badge variant="outline" className="ml-auto">
+                  {category.count}
+                </Badge>
+              </Link>
             </Button>
           ))}
         </div>
       </div>
-
       <div className="space-y-6">
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="recent">Recently Added</TabsTrigger>
-            <TabsTrigger value="favorites">Favorites</TabsTrigger>
-          </TabsList>
-          <TabsContent value="all" className="mt-6">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {recipes?.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe.recipe} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="recent" className="mt-6">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* {savedRecipes.slice(0, 2).map((recipe) => (
-                <RecipeCard key={recipe.id} {...recipe} />
-              ))} */}
-            </div>
-          </TabsContent>
-          <TabsContent value="favorites" className="mt-6">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* {savedRecipes.slice(0, 1).map((recipe) => (
-                <RecipeCard key={recipe.id} {...recipe} />
-              ))} */}
-            </div>
-          </TabsContent>
-        </Tabs>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {recipes?.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe.recipe} />
+          ))}
+        </div>
       </div>
     </div>
   );

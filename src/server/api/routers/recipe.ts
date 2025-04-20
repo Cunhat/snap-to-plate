@@ -1,7 +1,9 @@
 import { env } from "@/env";
 import { prompt } from "@/lib/utils";
 import {
+  categories,
   nutrition,
+  recipeCategories,
   recipes,
   source,
   user,
@@ -33,6 +35,11 @@ export const recipeRouter = createTRPCRouter({
               user: true,
             },
           },
+          categories: {
+            with: {
+              category: true,
+            },
+          },
         },
       });
       return recipe;
@@ -57,8 +64,6 @@ export const recipeRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { cursor, limit } = input;
-
-      console.log("CURSOR", cursor);
 
       const items = await ctx.db.query.recipes.findMany({
         orderBy: desc(recipes.createdAt),
@@ -175,11 +180,35 @@ export const recipeRouter = createTRPCRouter({
           difficulty: recipe.difficulty,
           ingredients: recipe.ingredients,
           instructions: recipe.instructions,
-          tags: recipe.tags,
           sourceId: createSource[0].id,
           nutritionId: createNutrition[0].id,
         })
         .returning();
+
+      if (createdRecipe[0]) {
+        if (recipe.tags && recipe.tags.length > 0) {
+          for (const tag of recipe.tags) {
+            const category = await ctx.db
+              .insert(categories)
+              .values({
+                name: tag,
+              })
+              .onConflictDoUpdate({
+                target: categories.name,
+                set: { name: tag },
+              })
+              .returning();
+
+            if (category[0]) {
+              await ctx.db.insert(recipeCategories).values({
+                recipeId: createdRecipe[0].id,
+                categoryId: category[0].id,
+              });
+            }
+          }
+        }
+      }
+      // ... existing code ...
 
       if (ctx.session) {
         try {
@@ -202,6 +231,7 @@ export const recipeRouter = createTRPCRouter({
         recipe: {
           with: {
             source: true,
+            categories: true,
           },
         },
       },

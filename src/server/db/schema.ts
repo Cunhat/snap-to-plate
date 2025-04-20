@@ -25,9 +25,10 @@ export const recipes = createTable("recipes", {
   difficulty: varchar({ length: 256 }),
   ingredients: text().array(),
   instructions: text().array(),
-  tags: text().array(),
-  nutritionId: integer().references(() => nutrition.id),
-  sourceId: integer().references(() => source.id),
+  nutritionId: integer().references(() => nutrition.id, {
+    onDelete: "cascade",
+  }),
+  sourceId: integer().references(() => source.id, { onDelete: "cascade" }),
   tokens: integer().default(0),
 });
 
@@ -64,6 +65,7 @@ export const recipeRelations = relations(recipes, ({ one, many }) => ({
     references: [source.id],
   }),
   savedByUsers: many(userRecipes),
+  categories: many(recipeCategories),
 }));
 
 export const user = createTable("user", {
@@ -141,3 +143,36 @@ export const userRecipesRelations = relations(userRecipes, ({ one }) => ({
     references: [recipes.id],
   }),
 }));
+
+export const categories = createTable("categories", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  name: varchar("name", { length: 256 }).notNull().unique(),
+});
+
+export const categoryRelations = relations(categories, ({ many }) => ({
+  recipes: many(recipeCategories),
+}));
+
+export const recipeCategories = createTable("recipe_categories", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  recipeId: integer("recipe_id")
+    .notNull()
+    .references(() => recipes.id, { onDelete: "cascade" }),
+  categoryId: integer("category_id")
+    .notNull()
+    .references(() => categories.id, { onDelete: "cascade" }),
+});
+
+export const recipeCategoriesRelations = relations(
+  recipeCategories,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeCategories.recipeId],
+      references: [recipes.id],
+    }),
+    category: one(categories, {
+      fields: [recipeCategories.categoryId],
+      references: [categories.id],
+    }),
+  }),
+);

@@ -54,10 +54,11 @@ ${videoUrl}
 6.  **Time Formatting**: Format "totalTime" as strings and seconds, please pay really attention to this because is very important to give the correct time to the user.
 7.  **Source Information:** Populate the "source" object with the correct platform, URL, and channel name.
 8.  **Nutritional Estimates**: if no nutrition information is available, attempt to estimate the values based on ingredients and common cooking techniques. If no estimate is possible, provide "N/A" for all nutritional values.
-9. **Difficulty Level**: if difficulty level is not explicitly stated, estimate it based on the complexity of the recipe.
+9.  **Difficulty Level**: if difficulty level is not explicitly stated, estimate it based on the complexity of the recipe.
 10. **Error Handling**: if is not possible to extract the recipe details, return an error with the case of the error.
 11. **Response Format**: This is very important and mandatory, the response must be only the JSON object, nothing else.
 12. **Image**: Is really important to get the video thumbnail as the image.
+13. **Categories**: Is really important to get the categories of the recipe, please pay really attention to this because is very important to give the correct categories to the user. I want categories with one word and the first letter always in uppercase.
 `;
 
 export function getRelativeTime(date: Date): string {

@@ -56,9 +56,9 @@ export function RecipeSection({ id }: { id: string }) {
               <p className="text-muted-foreground">{recipe.description}</p>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                {recipe.tags?.map((tag) => (
-                  <Badge key={tag} variant="secondary">
-                    {tag}
+                {recipe.categories?.map((category) => (
+                  <Badge key={category.id} variant="secondary">
+                    {category.category.name}
                   </Badge>
                 ))}
               </div>
