@@ -26,6 +26,8 @@ export function SavedRecipesList() {
 
 function SavedRecipesListSuspense() {
   const [recipes] = api.recipe.getUserRecipes.useSuspenseQuery();
+  const [data] = api.category.getUserCategories.useSuspenseQuery();
+  console.log(data);
 
   return (
     <div className="grid gap-8 md:grid-cols-[240px_1fr]">

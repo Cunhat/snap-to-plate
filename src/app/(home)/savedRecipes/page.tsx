@@ -22,6 +22,7 @@ export default async function SavedRecipes() {
   }
 
   void api.recipe.getUserRecipes.prefetch();
+  void api.category.getUserCategories.prefetch();
 
   return (
     <HydrateClient>
