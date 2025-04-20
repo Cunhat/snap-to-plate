@@ -28,6 +28,14 @@ export const categoryRouter = createTRPCRouter({
       userRecipe.recipe.categories.map((category) => category.category),
     );
 
-    return categories;
+    const uniqueCategories = new Set<string>();
+
+    categories.forEach((category) => {
+      category.forEach((c) => {
+        uniqueCategories.add(c.name);
+      });
+    });
+
+    return Array.from(uniqueCategories);
   }),
 });
