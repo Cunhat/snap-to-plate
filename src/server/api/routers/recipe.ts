@@ -224,7 +224,7 @@ export const recipeRouter = createTRPCRouter({
 
       return createdRecipe[0];
     }),
-  getUserRecipes: protectedProcedure.query(async ({ ctx }) => {
+  getUserRecipes: protectedProcedure.query(async ({ ctx, input }) => {
     return await ctx.db.query.userRecipes.findMany({
       where: eq(userRecipes.userId, ctx.session?.user.id ?? ""),
       with: {

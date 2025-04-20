@@ -5,19 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 
-export function SavedRecipesList() {
+export function SavedRecipesList({ categoryId }: { categoryId: string }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SavedRecipesListSuspense />
+      <SavedRecipesListSuspense categoryId={categoryId} />
     </Suspense>
   );
 }
 
-function SavedRecipesListSuspense() {
+function SavedRecipesListSuspense({ categoryId }: { categoryId: string }) {
   const [recipes] = api.recipe.getUserRecipes.useSuspenseQuery();
   const [categories] = api.category.getUserCategories.useSuspenseQuery();
+
+  const filteredRecipes = useMemo(() => {
+    if (!categoryId) {
+      return recipes;
+    }
+
+    return recipes.filter((recipe) => {
+      return recipe.recipe.categories.some(
+        (category) => category.id === Number(categoryId),
+      );
+    });
+  }, [recipes, categoryId]);
 
   return (
     <div className="grid gap-8 md:grid-cols-[240px_1fr]">
@@ -26,7 +38,7 @@ function SavedRecipesListSuspense() {
         <div className="space-y-1">
           <Button
             key={"all"}
-            variant={"secondary"}
+            variant={!categoryId ? "secondary" : "ghost"}
             className="w-full justify-start"
             asChild
           >
@@ -34,13 +46,15 @@ function SavedRecipesListSuspense() {
           </Button>
           {categories.map((category) => (
             <Button
-              key={category}
-              variant={"ghost"}
+              key={category.id}
+              variant={
+                categoryId === category.id.toString() ? "secondary" : "ghost"
+              }
               className="w-full justify-start"
               asChild
             >
-              <Link href={`/savedRecipes?category=${category}`}>
-                {category}
+              <Link href={`/savedRecipes?category=${category.id}`}>
+                {category.name}
               </Link>
             </Button>
           ))}
@@ -48,7 +62,7 @@ function SavedRecipesListSuspense() {
       </div>
       <div className="space-y-6">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recipes?.map((recipe) => (
+          {filteredRecipes?.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe.recipe} />
           ))}
         </div>

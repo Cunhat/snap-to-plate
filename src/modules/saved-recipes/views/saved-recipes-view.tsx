@@ -6,12 +6,16 @@ import { CookingPot, Search } from "lucide-react";
 import SavedRecipesHeader from "../sections/saved-recipes-header";
 import { SavedRecipesList } from "../sections/saved-recipes-list";
 
-export default function SavedRecipesView() {
+export default function SavedRecipesView({
+  categoryId,
+}: {
+  categoryId: string;
+}) {
   return (
     <main className="flex-1 py-8">
       <div className="container px-4 md:px-6">
         <SavedRecipesHeader />
-        <SavedRecipesList />
+        <SavedRecipesList categoryId={categoryId} />
       </div>
     </main>
   );

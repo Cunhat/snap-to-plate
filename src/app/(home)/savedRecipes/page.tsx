@@ -12,10 +12,16 @@ export const metadata: Metadata = {
   description: "View your saved recipes",
 };
 
-export default async function SavedRecipes() {
+export default async function SavedRecipes({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  const categoryId = searchParams.category as string;
 
   if (!session) {
     redirect("/");
@@ -26,7 +32,7 @@ export default async function SavedRecipes() {
 
   return (
     <HydrateClient>
-      <SavedRecipesView />
+      <SavedRecipesView categoryId={categoryId} />
     </HydrateClient>
   );
 }
