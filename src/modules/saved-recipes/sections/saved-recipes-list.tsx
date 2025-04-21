@@ -6,16 +6,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
 import Link from "next/link";
 import { Suspense, useMemo } from "react";
+import { useQueryState } from "nuqs";
 
 export function SavedRecipesList({ categoryId }: { categoryId: string }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SavedRecipesListSuspense categoryId={categoryId} />
+      <SavedRecipesListSuspense />
     </Suspense>
   );
 }
 
-function SavedRecipesListSuspense({ categoryId }: { categoryId: string }) {
+function SavedRecipesListSuspense() {
+  const [categoryId, setCategoryId] = useQueryState("category");
+
   const [recipes] = api.recipe.getUserRecipes.useSuspenseQuery();
   const [categories] = api.category.getUserCategories.useSuspenseQuery();
 
@@ -41,9 +44,9 @@ function SavedRecipesListSuspense({ categoryId }: { categoryId: string }) {
             key={"all"}
             variant={!categoryId ? "secondary" : "ghost"}
             className="w-full justify-start"
-            asChild
+            onClick={() => setCategoryId(null)}
           >
-            <Link href={`/savedRecipes`}>All</Link>
+            All
           </Button>
           {categories.map((category) => (
             <Button
@@ -52,11 +55,11 @@ function SavedRecipesListSuspense({ categoryId }: { categoryId: string }) {
                 categoryId === category.id.toString() ? "secondary" : "ghost"
               }
               className="w-full justify-start"
-              asChild
+              onClick={() => setCategoryId(category.id.toString())}
             >
-              <Link href={`/savedRecipes?category=${category.id}`}>
-                {category.name}
-              </Link>
+              {/* <Link href={`/savedRecipes?category=${category.id}`}> */}
+              {category.name}
+              {/* </Link> */}
             </Button>
           ))}
         </div>
