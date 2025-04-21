@@ -19,7 +19,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
-import type { AIRecipe } from "@/lib/schemas";
+import { AIRecipeSchema, type AIRecipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
   getRecipe: publicProcedure
@@ -133,7 +133,16 @@ export const recipeRouter = createTRPCRouter({
 
       const recipe = (await JSON.parse(formattedResponse)) as AIRecipe;
 
-      console.log(recipe);
+      const parsedRecipe = AIRecipeSchema.safeParse(recipe);
+
+      if (!parsedRecipe.success) {
+        console.log(recipe);
+        console.error(parsedRecipe.error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to parse AI response",
+        });
+      }
 
       // Create source
       const createSource = await ctx.db

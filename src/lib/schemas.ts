@@ -20,12 +20,21 @@ export type Recipe = z.infer<typeof recipeInsertSchema>;
 export type Nutrition = z.infer<typeof nutritionInsertSchema>;
 export type Source = z.infer<typeof sourceInsertSchema>;
 
+export const AIRecipeSchema = z.object({
+  ...recipeInsertSchema.shape,
+  source: sourceInsertSchema,
+  nutrition: nutritionInsertSchema,
+  categories: z.array(z.string()),
+});
+
+export type AIRecipe = z.infer<typeof AIRecipeSchema>;
+
 // For AI response that includes nested objects
-export type AIRecipe = Recipe & {
-  source: Source;
-  nutrition: Nutrition;
-  categories: string[];
-};
+// export type AIRecipe = Recipe & {
+//   source: Source;
+//   nutrition: Nutrition;
+//   categories: string[];
+// };
 
 // For specific router output types when needed
 export type RecipeType = RouterOutput["recipe"]["getLatestRecipes"][number];
