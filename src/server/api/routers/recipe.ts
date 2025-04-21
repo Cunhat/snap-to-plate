@@ -133,6 +133,8 @@ export const recipeRouter = createTRPCRouter({
 
       const recipe = (await JSON.parse(formattedResponse)) as AIRecipe;
 
+      console.log(recipe);
+
       // Create source
       const createSource = await ctx.db
         .insert(source)
@@ -185,30 +187,33 @@ export const recipeRouter = createTRPCRouter({
         })
         .returning();
 
-      if (createdRecipe[0]) {
-        if (recipe.tags && recipe.tags.length > 0) {
-          for (const tag of recipe.tags) {
-            const category = await ctx.db
+      if (createdRecipe[0] && recipe.categories?.length) {
+        // dedupe whitespace‐normalized tag
+        const uniqueCategories = Array.from(
+          new Set(recipe.categories.map((c) => c.trim())),
+        );
+
+        const catRows = await Promise.all(
+          uniqueCategories.map((category) =>
+            ctx.db
               .insert(categories)
-              .values({
-                name: tag,
-              })
+              .values({ name: category })
               .onConflictDoUpdate({
                 target: categories.name,
-                set: { name: tag },
+                set: { name: category },
               })
-              .returning();
+              .returning()
+              .then((rows) => rows[0]),
+          ),
+        );
 
-            if (category[0]) {
-              await ctx.db.insert(recipeCategories).values({
-                recipeId: createdRecipe[0].id,
-                categoryId: category[0].id,
-              });
-            }
-          }
-        }
+        await ctx.db.insert(recipeCategories).values(
+          catRows.map((c) => ({
+            recipeId: createdRecipe[0]!.id,
+            categoryId: c!.id,
+          })),
+        );
       }
-      // ... existing code ...
 
       if (ctx.session) {
         try {
@@ -231,7 +236,11 @@ export const recipeRouter = createTRPCRouter({
         recipe: {
           with: {
             source: true,
-            categories: true,
+            categories: {
+              with: {
+                category: true,
+              },
+            },
           },
         },
       },

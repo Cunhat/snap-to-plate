@@ -149,10 +149,6 @@ export const categories = createTable("categories", {
   name: varchar("name", { length: 256 }).notNull().unique(),
 });
 
-export const categoryRelations = relations(categories, ({ many }) => ({
-  recipes: many(recipeCategories),
-}));
-
 export const recipeCategories = createTable("recipe_categories", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   recipeId: integer("recipe_id")
@@ -176,3 +172,7 @@ export const recipeCategoriesRelations = relations(
     }),
   }),
 );
+
+export const categoryRelations = relations(categories, ({ many }) => ({
+  recipes: many(recipeCategories),
+}));

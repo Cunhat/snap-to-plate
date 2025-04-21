@@ -25,9 +25,10 @@ function SavedRecipesListSuspense({ categoryId }: { categoryId: string }) {
     }
 
     return recipes.filter((recipe) => {
-      return recipe.recipe.categories.some(
-        (category) => category.id === Number(categoryId),
-      );
+      return recipe.recipe.categories.some((category) => {
+        const numCategoryId = Number(categoryId);
+        return !isNaN(numCategoryId) && category.id === numCategoryId;
+      });
     });
   }, [recipes, categoryId]);
 
