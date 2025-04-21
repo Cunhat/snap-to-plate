@@ -1,7 +1,9 @@
 import { env } from "@/env";
 import { prompt } from "@/lib/utils";
 import {
+  categories,
   nutrition,
+  recipeCategories,
   recipes,
   source,
   user,
@@ -33,6 +35,11 @@ export const recipeRouter = createTRPCRouter({
               user: true,
             },
           },
+          categories: {
+            with: {
+              category: true,
+            },
+          },
         },
       });
       return recipe;
@@ -57,8 +64,6 @@ export const recipeRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { cursor, limit } = input;
-
-      console.log("CURSOR", cursor);
 
       const items = await ctx.db.query.recipes.findMany({
         orderBy: desc(recipes.createdAt),
@@ -128,6 +133,8 @@ export const recipeRouter = createTRPCRouter({
 
       const recipe = (await JSON.parse(formattedResponse)) as AIRecipe;
 
+      console.log(recipe);
+
       // Create source
       const createSource = await ctx.db
         .insert(source)
@@ -175,11 +182,38 @@ export const recipeRouter = createTRPCRouter({
           difficulty: recipe.difficulty,
           ingredients: recipe.ingredients,
           instructions: recipe.instructions,
-          tags: recipe.tags,
           sourceId: createSource[0].id,
           nutritionId: createNutrition[0].id,
         })
         .returning();
+
+      if (createdRecipe[0] && recipe.categories?.length) {
+        // dedupe whitespace‐normalized tag
+        const uniqueCategories = Array.from(
+          new Set(recipe.categories.map((c) => c.trim())),
+        );
+
+        const catRows = await Promise.all(
+          uniqueCategories.map((category) =>
+            ctx.db
+              .insert(categories)
+              .values({ name: category })
+              .onConflictDoUpdate({
+                target: categories.name,
+                set: { name: category },
+              })
+              .returning()
+              .then((rows) => rows[0]),
+          ),
+        );
+
+        await ctx.db.insert(recipeCategories).values(
+          catRows.map((c) => ({
+            recipeId: createdRecipe[0]!.id,
+            categoryId: c!.id,
+          })),
+        );
+      }
 
       if (ctx.session) {
         try {
@@ -195,13 +229,18 @@ export const recipeRouter = createTRPCRouter({
 
       return createdRecipe[0];
     }),
-  getUserRecipes: protectedProcedure.query(async ({ ctx }) => {
+  getUserRecipes: protectedProcedure.query(async ({ ctx, input }) => {
     return await ctx.db.query.userRecipes.findMany({
       where: eq(userRecipes.userId, ctx.session?.user.id ?? ""),
       with: {
         recipe: {
           with: {
             source: true,
+            categories: {
+              with: {
+                category: true,
+              },
+            },
           },
         },
       },

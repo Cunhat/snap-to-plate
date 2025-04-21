@@ -12,20 +12,27 @@ export const metadata: Metadata = {
   description: "View your saved recipes",
 };
 
-export default async function SavedRecipes() {
+export default async function SavedRecipes({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  const categoryId = searchParams.category as string;
 
   if (!session) {
     redirect("/");
   }
 
   void api.recipe.getUserRecipes.prefetch();
+  void api.category.getUserCategories.prefetch();
 
   return (
     <HydrateClient>
-      <SavedRecipesView />
+      <SavedRecipesView categoryId={categoryId} />
     </HydrateClient>
   );
 }

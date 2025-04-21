@@ -24,6 +24,7 @@ export type Source = z.infer<typeof sourceInsertSchema>;
 export type AIRecipe = Recipe & {
   source: Source;
   nutrition: Nutrition;
+  categories: string[];
 };
 
 // For specific router output types when needed
