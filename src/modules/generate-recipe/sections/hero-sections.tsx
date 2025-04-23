@@ -21,8 +21,7 @@ export default function HeroSection() {
 
       <div className="flex items-center justify-between">
         <p className="text-muted-foreground text-sm">
-          Free plan: <span className="font-medium">1</span> generation remaining
-          today
+          Free plan: <span className="font-medium">1</span> generation per day
         </p>
         <Link href="/pricing" className="text-primary text-sm hover:underline">
           Upgrade for unlimited generations

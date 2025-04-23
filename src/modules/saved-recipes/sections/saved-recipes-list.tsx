@@ -8,15 +8,15 @@ import Link from "next/link";
 import { Suspense, useMemo } from "react";
 import { useQueryState } from "nuqs";
 
-export function SavedRecipesList({ categoryId }: { categoryId: string }) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SavedRecipesListSuspense />
-    </Suspense>
-  );
-}
+// export function SavedRecipesList({ categoryId }: { categoryId: string }) {
+//   return (
+//     <Suspense fallback={<div>Loading...</div>}>
+//       <SavedRecipesListSuspense />
+//     </Suspense>
+//   );
+// }
 
-function SavedRecipesListSuspense() {
+export function SavedRecipesList() {
   const [categoryId, setCategoryId] = useQueryState("category");
 
   const [recipes] = api.recipe.getUserRecipes.useSuspenseQuery();
