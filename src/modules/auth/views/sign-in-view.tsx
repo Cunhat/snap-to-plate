@@ -22,6 +22,7 @@ import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Utensils } from "lucide-react";
 import Link from "next/link";
+import Google from "public/google";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -167,20 +168,7 @@ export default function SignInView() {
               className="h-12 w-full gap-2"
               onClick={handleGoogleSignIn}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5"
-              >
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-              </svg>
+              <Google />
               Continue with Google
             </Button>
           </div>

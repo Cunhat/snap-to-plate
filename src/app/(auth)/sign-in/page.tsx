@@ -9,20 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const signIn = async (formData: FormData) => {
-    "use server";
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    await auth.api.signInEmail({
-      body: {
-        email: email as string,
-        password: password as string,
-      },
-    });
-
-    redirect("/savedRecipes");
-  };
-
   return <SignInView />;
 }

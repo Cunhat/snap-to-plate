@@ -27,7 +27,8 @@ import { api } from "@/trpc/react";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
+import { authClient } from "@/lib/auth-client";
+import Google from "public/google";
 const formSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name must be at least 2 characters.",
@@ -76,6 +77,12 @@ export default function SignUpView() {
       redirect("/savedRecipes");
     }
   }, [isSuccess]);
+
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  };
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
@@ -216,20 +223,7 @@ export default function SignUpView() {
           </div>
           <div className="space-y-2">
             <Button variant="outline" className="h-12 w-full gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5"
-              >
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-              </svg>
+              <Google />
               Sign up with Google
             </Button>
           </div>
