@@ -7,14 +7,7 @@ import { api } from "@/trpc/react";
 import Link from "next/link";
 import { Suspense, useMemo } from "react";
 import { useQueryState } from "nuqs";
-
-// export function SavedRecipesList({ categoryId }: { categoryId: string }) {
-//   return (
-//     <Suspense fallback={<div>Loading...</div>}>
-//       <SavedRecipesListSuspense />
-//     </Suspense>
-//   );
-// }
+import { CookingPot } from "lucide-react";
 
 export function SavedRecipesList() {
   const [categoryId, setCategoryId] = useQueryState("category");
@@ -34,6 +27,15 @@ export function SavedRecipesList() {
       });
     });
   }, [recipes, categoryId]);
+
+  if (filteredRecipes.length === 0) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-4">
+        <CookingPot className="text-muted-foreground h-20 w-20 opacity-50" />
+        <p className="text-muted-foreground opacity-50">No recipes found...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-8 md:grid-cols-[240px_1fr]">
@@ -57,9 +59,7 @@ export function SavedRecipesList() {
               className="w-full justify-start"
               onClick={() => setCategoryId(category.id.toString())}
             >
-              {/* <Link href={`/savedRecipes?category=${category.id}`}> */}
               {category.name}
-              {/* </Link> */}
             </Button>
           ))}
         </div>
