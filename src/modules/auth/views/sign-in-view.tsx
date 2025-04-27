@@ -68,6 +68,13 @@ export default function SignInView() {
       },
     );
   }
+
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  };
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
       <Link href="/" className="mb-8 flex items-center gap-2">
@@ -155,7 +162,11 @@ export default function SignInView() {
           </div>
 
           <div className="space-y-2">
-            <Button variant="outline" className="h-12 w-full gap-2">
+            <Button
+              variant="outline"
+              className="h-12 w-full gap-2"
+              onClick={handleGoogleSignIn}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

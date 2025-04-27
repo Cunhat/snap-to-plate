@@ -15,9 +15,6 @@ export default async function UrlInput() {
             <h2 className="text-3xl font-bold tracking-tighter">
               Paste a YouTube Video URL to Get Started
             </h2>
-            {/* <p className="text-muted-foreground">
-              Works with YouTube, Instagram, and TikTok cooking videos
-            </p> */}
           </div>
           <VideoUrlInput user={session?.user} />
         </div>
