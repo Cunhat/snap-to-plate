@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Suspense, useMemo } from "react";
 import { useQueryState } from "nuqs";
 import { CookingPot } from "lucide-react";
+import { EmptyRecipes } from "../components/empty-recipes";
 
 export function SavedRecipesList() {
   const [categoryId, setCategoryId] = useQueryState("category");
@@ -23,18 +24,13 @@ export function SavedRecipesList() {
     return recipes.filter((recipe) => {
       return recipe.recipe.categories.some((category) => {
         const numCategoryId = Number(categoryId);
-        return !isNaN(numCategoryId) && category.id === numCategoryId;
+        return !isNaN(numCategoryId) && category.categoryId === numCategoryId;
       });
     });
   }, [recipes, categoryId]);
 
-  if (filteredRecipes.length === 0) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center gap-4">
-        <CookingPot className="text-muted-foreground h-20 w-20 opacity-50" />
-        <p className="text-muted-foreground opacity-50">No recipes found...</p>
-      </div>
-    );
+  if (filteredRecipes.length === 0 && !categoryId) {
+    return <EmptyRecipes />;
   }
 
   return (
@@ -70,6 +66,7 @@ export function SavedRecipesList() {
             <RecipeCard key={recipe.id} recipe={recipe.recipe} />
           ))}
         </div>
+        {filteredRecipes.length === 0 && <EmptyRecipes />}
       </div>
     </div>
   );
