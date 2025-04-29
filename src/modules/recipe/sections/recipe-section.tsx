@@ -13,6 +13,8 @@ import {
   Cog,
   Printer,
   Share2,
+  ShoppingBasket,
+  ShoppingCart,
   Users,
   Youtube,
 } from "lucide-react";
@@ -132,8 +134,8 @@ export function RecipeSection({ id }: { id: string }) {
               <TabsContent value="ingredients" className="mt-4">
                 <ul className="space-y-2">
                   {recipe.ingredients?.map((ingredient, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <div className="border-primary bg-primary/10 mt-1 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full border" />
+                    <li key={index} className="flex items-center gap-2">
+                      <ShoppingBasket className="text-primary h-5 w-5" />
                       <span>{ingredient}</span>
                     </li>
                   ))}

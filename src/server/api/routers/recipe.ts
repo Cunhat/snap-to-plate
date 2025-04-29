@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { AIRecipeSchema, type AIRecipe } from "@/lib/schemas";
 import { prompt } from "@/lib/utils";
 import {
   categories,
@@ -6,7 +7,6 @@ import {
   recipeCategories,
   recipes,
   source,
-  user,
   userRecipes,
 } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
@@ -19,7 +19,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
-import { AIRecipeSchema, type AIRecipe } from "@/lib/schemas";
 
 export const recipeRouter = createTRPCRouter({
   getRecipe: publicProcedure
@@ -195,6 +194,7 @@ export const recipeRouter = createTRPCRouter({
           instructions: recipe.instructions,
           sourceId: createSource[0].id,
           nutritionId: createNutrition[0].id,
+          tokens: response.usageMetadata?.totalTokenCount,
         })
         .returning();
 
