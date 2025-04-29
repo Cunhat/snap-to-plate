@@ -1,30 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 import {
-  Utensils,
+  Calculator,
   CheckCircle2,
+  ChefHat,
   Clock,
   List,
-  ChefHat,
-  Calculator,
-  Hourglass,
-  Loader2,
   Loader,
+  Utensils,
 } from "lucide-react";
 
 interface GeneratingRecipeModalProps {
