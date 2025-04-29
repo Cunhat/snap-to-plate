@@ -120,6 +120,8 @@ export const recipeRouter = createTRPCRouter({
         ],
       });
 
+      console.log(response);
+
       if (!response.text) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

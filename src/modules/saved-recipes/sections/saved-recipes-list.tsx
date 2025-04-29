@@ -1,13 +1,9 @@
 "use client";
 import RecipeCard from "@/components/recipe-card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
-import Link from "next/link";
-import { Suspense, useMemo } from "react";
 import { useQueryState } from "nuqs";
-import { CookingPot } from "lucide-react";
+import { useMemo } from "react";
 import { EmptyRecipes } from "../components/empty-recipes";
 
 export function SavedRecipesList() {
