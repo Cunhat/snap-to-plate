@@ -1,6 +1,8 @@
+import { auth } from "@/lib/auth";
 import GenerateRecipeView from "@/modules/generate-recipe/views/generate-recipe-view";
 import { api, HydrateClient } from "@/trpc/server";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 

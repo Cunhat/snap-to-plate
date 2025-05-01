@@ -1,12 +1,13 @@
 import { env } from "@/env";
 import { AIRecipeSchema, type AIRecipe } from "@/lib/schemas";
-import { prompt } from "@/lib/utils";
+import { prompt, SubscriptionTiers } from "@/lib/utils";
 import {
   categories,
   nutrition,
   recipeCategories,
   recipes,
   source,
+  user,
   userRecipes,
 } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
@@ -101,6 +102,25 @@ export const recipeRouter = createTRPCRouter({
         });
 
         return recipe;
+      }
+
+      const session = ctx.session;
+
+      if (session) {
+        const loggedInUser = await ctx.db.query.user.findFirst({
+          where: eq(user.id, session.user.id),
+        });
+
+        if (loggedInUser) {
+          const dailyTokens = loggedInUser.dailyTokens;
+
+          if (dailyTokens >= SubscriptionTiers.freeTier) {
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "You have reached the daily limit of recipes",
+            });
+          }
+        }
       }
 
       const ai = new GoogleGenAI({ apiKey: env.GOOGLE_GENAI_API_KEY });
