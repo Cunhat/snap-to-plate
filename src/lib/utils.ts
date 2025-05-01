@@ -84,3 +84,9 @@ export function getRelativeTime(date: Date): string {
 
   return "just now";
 }
+
+export const SubscriptionTiers = {
+  freeTier: 5000,
+  cookTier: 50000,
+  chefTier: "unlimited",
+};

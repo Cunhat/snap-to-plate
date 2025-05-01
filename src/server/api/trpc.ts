@@ -17,6 +17,8 @@ import { headers } from "next/headers";
 import { user } from "../db/schema";
 import { ratelimit, rateLimitByIp } from "@/lib/redis";
 import { redirect } from "next/navigation";
+import dayjs from "dayjs";
+import { resetToken } from "../resetToken";
 /**
  * 1. CONTEXT
  *
@@ -138,6 +140,9 @@ export const protectedProcedure = t.procedure.use(async ({ next, ctx }) => {
   if (!userInfo) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  // Check if should reset user's token
+  await resetToken(userInfo);
 
   const { success } = await ratelimit.limit(ctx.session.user.id);
 

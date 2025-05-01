@@ -76,6 +76,8 @@ export const user = createTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
+  dailyTokens: integer().notNull().default(0),
+  dailyTokensResetAt: timestamp("daily_tokens_reset_at").notNull().defaultNow(),
 });
 
 export const session = createTable("session", {

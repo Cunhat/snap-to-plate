@@ -81,11 +81,6 @@ const RecipeCard = ({ recipe, canSave = false }: RecipeCardProps) => {
         </div>
         <CardContent className="p-4">
           <div className="mb-2 flex items-center gap-2">
-            {/* <img
-              src={recipe.user.avatar || "/placeholder.svg"}
-              alt={recipe.user.name}
-              className="h-6 w-6 rounded-full object-cover"
-            /> */}
             <span className="text-muted-foreground text-sm">
               {recipe.source?.channel}
             </span>
@@ -108,13 +103,7 @@ const RecipeCard = ({ recipe, canSave = false }: RecipeCardProps) => {
                   .format("HH[h] mm[m]")}
               </span>
             </div>
-            <div className="flex items-center space-x-2">
-              {/* <Flame size={16} className="text-recipe-primary" /> */}
-              {/* <Badge variant="outline" className={getDifficultyColor()}>
-                {recipe.difficulty.charAt(0).toUpperCase() +
-                  recipe.difficulty.slice(1)}
-              </Badge> */}
-            </div>
+            <div className="flex items-center space-x-2"></div>
           </div>
         </CardContent>
       </Card>

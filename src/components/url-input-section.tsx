@@ -1,12 +1,11 @@
 import VideoUrlInput from "@/components/video-url-input";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import type { User } from "better-auth";
 
-export default async function UrlInput() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+type UrlInputSectionProps = {
+  user: User | undefined;
+};
 
+export default function UrlInput({ user }: UrlInputSectionProps) {
   return (
     <section className="flex-1 py-12 md:py-16">
       <div className="container px-4 md:px-6">
@@ -16,7 +15,7 @@ export default async function UrlInput() {
               Paste a YouTube Video URL to Get Started
             </h2>
           </div>
-          <VideoUrlInput user={session?.user} />
+          <VideoUrlInput user={user} />
         </div>
       </div>
     </section>

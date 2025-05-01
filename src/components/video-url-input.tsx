@@ -20,13 +20,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import TokenDisplay from "./tokens-display";
+import type { ExtendedUser } from "@/lib/schemas";
 
 const VideoUrlInputSchema = z.object({
   url: z.string().url(),
 });
 
 type VideoUrlInputProps = {
-  user: User | undefined;
+  user: ExtendedUser;
 };
 
 export default function VideoUrlInput({ user }: VideoUrlInputProps) {
@@ -114,6 +116,7 @@ export default function VideoUrlInput({ user }: VideoUrlInputProps) {
               <p className="text-muted-foreground text-center text-xs">
                 Processing may take up to 1 minute depending on video length
               </p>
+              {user && <TokenDisplay totalTokens={user.dailyTokens} />}
             </form>
           </Form>
         </CardContent>

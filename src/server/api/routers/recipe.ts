@@ -1,17 +1,18 @@
 import { env } from "@/env";
 import { AIRecipeSchema, type AIRecipe } from "@/lib/schemas";
-import { prompt } from "@/lib/utils";
+import { prompt, SubscriptionTiers } from "@/lib/utils";
 import {
   categories,
   nutrition,
   recipeCategories,
   recipes,
   source,
+  user,
   userRecipes,
 } from "@/server/db/schema";
 import { GoogleGenAI } from "@google/genai";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, lt } from "drizzle-orm";
+import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -103,6 +104,26 @@ export const recipeRouter = createTRPCRouter({
         return recipe;
       }
 
+      const session = ctx.session;
+
+      if (session) {
+        const loggedInUser = await ctx.db.query.user.findFirst({
+          where: eq(user.id, session.user.id),
+        });
+
+        if (loggedInUser) {
+          const dailyTokens = loggedInUser.dailyTokens;
+
+          // pessimistically assume worst-case 500 tokens before generation
+          if (dailyTokens >= SubscriptionTiers.freeTier - 500) {
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "You have reached the daily limit of recipes",
+            });
+          }
+        }
+      }
+
       const ai = new GoogleGenAI({ apiKey: env.GOOGLE_GENAI_API_KEY });
 
       const response = await ai.models.generateContent({
@@ -118,8 +139,6 @@ export const recipeRouter = createTRPCRouter({
           },
         ],
       });
-
-      console.log(response);
 
       if (!response.text) {
         throw new TRPCError({
@@ -228,10 +247,35 @@ export const recipeRouter = createTRPCRouter({
 
       if (ctx.session) {
         try {
-          await ctx.db.insert(userRecipes).values({
-            userId: ctx.session.user.id,
-            recipeId: createdRecipe[0]!.id,
-          });
+          await Promise.all([
+            ctx.db.insert(userRecipes).values({
+              userId: ctx.session.user.id,
+              recipeId: createdRecipe[0]!.id,
+            }),
+
+            ctx.db
+              .update(user)
+              .set({
+                dailyTokens: sql`${user.dailyTokens} + ${response.usageMetadata?.totalTokenCount ?? 0}`,
+              })
+              .where(
+                and(
+                  eq(user.id, ctx.session.user.id),
+                  lt(
+                    sql`${user.dailyTokens} + ${response.usageMetadata?.totalTokenCount ?? 0}`,
+                    SubscriptionTiers.freeTier,
+                  ),
+                ),
+              ),
+            // ctx.db
+            //   .update(user)
+            //   .set({
+            //     dailyTokens:
+            //       ctx.session.user.dailyTokens +
+            //       (response.usageMetadata?.totalTokenCount ?? 0),
+            //   })
+            //   .where(eq(user.id, ctx.session.user.id)),
+          ]);
         } catch (error) {
           console.error("Failed to associate recipe with user:", error);
           // Continue execution as the recipe was still created successfully

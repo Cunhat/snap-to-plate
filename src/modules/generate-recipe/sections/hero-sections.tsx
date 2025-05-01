@@ -1,8 +1,14 @@
 import UrlInput from "@/components/url-input-section";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Link from "next/link";
 import React from "react";
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
@@ -16,17 +22,22 @@ export default function HeroSection() {
       </div>
 
       <div className="bg-muted/50 rounded-lg border p-6 shadow-sm">
-        <UrlInput />
+        <UrlInput user={session?.user} />
       </div>
 
-      <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-sm">
-          Free plan: <span className="font-medium">1</span> generation per day
-        </p>
-        <Link href="/pricing" className="text-primary text-sm hover:underline">
-          Upgrade for unlimited generations
-        </Link>
-      </div>
+      {!session && (
+        <div className="flex items-center justify-between">
+          <p className="text-muted-foreground text-sm">
+            Free plan: <span className="font-medium">1</span> generation per day
+          </p>
+          <Link
+            href="/pricing"
+            className="text-primary text-sm hover:underline"
+          >
+            Upgrade for unlimited generations
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
