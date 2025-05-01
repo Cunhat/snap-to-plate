@@ -5,11 +5,7 @@ import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
 import { db } from "./db";
 import { user } from "./db/schema";
-
-interface ExtendedUser extends User {
-  dailyTokensResetAt: Date;
-  dailyTokens: number;
-}
+import type { ExtendedUser } from "@/lib/schemas";
 
 export async function resetToken(userInfo: ExtendedUser) {
   // Check if should reset user's token

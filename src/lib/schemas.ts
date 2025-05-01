@@ -3,6 +3,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { recipes, nutrition, source } from "@/server/db/schema";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@/server/api/root";
+import type { User } from "better-auth";
 
 // type RouterInput = inferRouterInputs<AppRouter>;
 type RouterOutput = inferRouterOutputs<AppRouter>;
@@ -38,3 +39,8 @@ export type AIRecipe = z.infer<typeof AIRecipeSchema>;
 
 // For specific router output types when needed
 export type RecipeType = RouterOutput["recipe"]["getLatestRecipes"][number];
+
+export interface ExtendedUser extends User {
+  dailyTokensResetAt: Date;
+  dailyTokens: number;
+}

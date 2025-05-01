@@ -21,13 +21,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import TokenDisplay from "./tokens-display";
+import type { ExtendedUser } from "@/lib/schemas";
 
 const VideoUrlInputSchema = z.object({
   url: z.string().url(),
 });
 
 type VideoUrlInputProps = {
-  user: User | undefined;
+  user: ExtendedUser;
 };
 
 export default function VideoUrlInput({ user }: VideoUrlInputProps) {

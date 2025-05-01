@@ -139,8 +139,6 @@ export const recipeRouter = createTRPCRouter({
         ],
       });
 
-      console.log(response);
-
       if (!response.text) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -248,10 +246,20 @@ export const recipeRouter = createTRPCRouter({
 
       if (ctx.session) {
         try {
-          await ctx.db.insert(userRecipes).values({
-            userId: ctx.session.user.id,
-            recipeId: createdRecipe[0]!.id,
-          });
+          await Promise.all([
+            ctx.db.insert(userRecipes).values({
+              userId: ctx.session.user.id,
+              recipeId: createdRecipe[0]!.id,
+            }),
+            ctx.db
+              .update(user)
+              .set({
+                dailyTokens:
+                  ctx.session.user.dailyTokens +
+                  (response.usageMetadata?.totalTokenCount ?? 0),
+              })
+              .where(eq(user.id, ctx.session.user.id)),
+          ]);
         } catch (error) {
           console.error("Failed to associate recipe with user:", error);
           // Continue execution as the recipe was still created successfully
