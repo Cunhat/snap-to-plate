@@ -12,7 +12,10 @@ interface TokenDisplayProps {
 
 export default function TokenDisplay({ totalTokens }: TokenDisplayProps) {
   const maxTokens = SubscriptionTiers.freeTier;
-  const percentage = Math.round((totalTokens / maxTokens) * 100);
+  const percentage = Math.min(
+    100,
+    Math.max(0, Math.round((totalTokens / maxTokens) * 100)),
+  );
 
   return (
     <div className="space-y-2">
